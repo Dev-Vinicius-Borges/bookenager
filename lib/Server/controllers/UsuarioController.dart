@@ -1,4 +1,7 @@
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
+import 'package:bookio/Server/dtos/Usuario/FazerLoginDto.dart';
+import 'package:bookio/Server/models/RespostaModel.dart';
+import 'package:bookio/Server/models/UsuariosModel.dart';
 import 'package:bookio/Server/services/UsuarioService.dart';
 
 class UsuarioController{
@@ -8,7 +11,11 @@ class UsuarioController{
     _service = new UsuarioService();
   }
 
-  void CriarUsuario(CriarUsuarioDto criarUsuarioDto){
-    _service.CriarUsuario(criarUsuarioDto);
+  Future<RespostaModel<UsuariosModel>> CriarUsuario(CriarUsuarioDto criarUsuarioDto) async{
+    return await _service.CriarUsuario(criarUsuarioDto);
+  }
+
+  Future<RespostaModel<UsuariosModel>> FazerLogin(FazerLoginDto fazerLoginDto) async{
+    return await _service.FazerLogin(fazerLoginDto);
   }
 }
