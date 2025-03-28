@@ -1,7 +1,11 @@
+import 'package:bookio/Server/session/config.dart';
+import 'package:bookio/pages/AccountPage.dart';
+import 'package:bookio/pages/BooksPage.dart';
 import 'package:bookio/pages/HomePage.dart';
 import 'package:bookio/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -13,7 +17,12 @@ void main() async {
       anonKey: dotenv.env['SUPABASE_ANON_KEY']!
   );
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+        create: (context) => SessionManager()..loadSession(),
+      child: MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,7 +38,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => HomePage(),
-        '/cadastro': (context) => RegisterPage()
+        '/cadastro': (context) => RegisterPage(),
+        '/home': (context) => BooksPage(),
+        '/conta': (context) => AccountPage()
       },
     );
   }
