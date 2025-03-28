@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
 import 'package:flutter/material.dart';
@@ -42,14 +44,14 @@ class RegisterFormState extends State<RegisterForm> {
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                     ),
                     validator:
                         (String? value) =>
-                    !valueValidator(value) ? "Insira o nome." : null,
+                            !valueValidator(value) ? "Insira o nome." : null,
                     controller: nameController,
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
@@ -82,7 +84,7 @@ class RegisterFormState extends State<RegisterForm> {
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
@@ -122,7 +124,7 @@ class RegisterFormState extends State<RegisterForm> {
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
@@ -165,14 +167,31 @@ class RegisterFormState extends State<RegisterForm> {
                   width: double.infinity,
                   height: 40,
                   child: TextButton(
-                    onPressed: () {
-                      CriarUsuarioDto usuario = CriarUsuarioDto(
-                          nome: nameController.text, 
-                          email: emailController.text, 
-                          senha: passwordController.text
-                      );
-                      
-                      UsuarioController().CriarUsuario(usuario);
+                    onPressed: () async {
+                      if(_formKey.currentState!.validate()){
+                        CriarUsuarioDto usuario = CriarUsuarioDto(
+                          nome: nameController.text,
+                          email: emailController.text,
+                          senha: passwordController.text,
+                        );
+
+                        final criacao = await UsuarioController().CriarUsuario(
+                          usuario,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(criacao.mensagem.toString())),
+                        );
+
+                        if (criacao.status == HttpStatus.created) {
+                          Navigator.pushNamed(context, "/login");
+                        }
+                      }else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Por favor, preencha todos os campos corretamente.")),
+                        );
+
+                      }
                     },
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(

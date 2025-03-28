@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:bookio/Server/controllers/UsuarioController.dart';
+import 'package:bookio/Server/dtos/Usuario/FazerLoginDto.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -39,7 +43,7 @@ class LoginFormState extends State<LoginForm> {
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
@@ -79,7 +83,7 @@ class LoginFormState extends State<LoginForm> {
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
@@ -122,7 +126,30 @@ class LoginFormState extends State<LoginForm> {
                   width: double.infinity,
                   height: 40,
                   child: TextButton(
-                    onPressed: () => {},
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        FazerLoginDto loginDto = FazerLoginDto(
+                          email: emailController.text,
+                          senha: passwordController.text,
+                        );
+
+                        final login = await UsuarioController().FazerLogin(
+                          loginDto,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(login.mensagem.toString())),
+                        );
+
+                        if(login.status == HttpStatus.accepted){
+                          Navigator.pushNamed(context, "/home");
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Preencha todos os campos.")),
+                        );
+                      }
+                    },
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(
                         Color.fromARGB(255, 85, 103, 254),
