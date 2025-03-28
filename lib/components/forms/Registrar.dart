@@ -4,14 +4,14 @@ import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
 import 'package:flutter/material.dart';
 
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
+class Registrar extends StatefulWidget {
+  const Registrar({super.key});
 
   @override
-  State<RegisterForm> createState() => RegisterFormState();
+  State<Registrar> createState() => RegistrarState();
 }
 
-class RegisterFormState extends State<RegisterForm> {
+class RegistrarState extends State<Registrar> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
