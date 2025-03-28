@@ -2,16 +2,18 @@ import 'dart:io';
 
 import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/Usuario/FazerLoginDto.dart';
+import 'package:bookio/Server/session/config.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<LoginForm> createState() => LoginFormState();
+  State<Login> createState() => LoginState();
 }
 
-class LoginFormState extends State<LoginForm> {
+class LoginState extends State<Login> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
 
@@ -141,7 +143,11 @@ class LoginFormState extends State<LoginForm> {
                           SnackBar(content: Text(login.mensagem.toString())),
                         );
 
-                        if(login.status == HttpStatus.accepted){
+                        if (login.status == HttpStatus.accepted) {
+                          Provider.of<SessionManager>(
+                            context,
+                            listen: false,
+                          ).setIdUsuario(login.dados!.id);
                           Navigator.pushNamed(context, "/home");
                         }
                       } else {

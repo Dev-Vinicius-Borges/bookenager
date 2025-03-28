@@ -1,4 +1,4 @@
-import 'package:bookio/components/forms/RegisterForm.dart';
+import 'package:bookio/components/forms/Registrar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class RegisterPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 20, 24, 27)
         ),
-        child: RegisterForm(),
+        child: Registrar(),
       ),
     );
   }
