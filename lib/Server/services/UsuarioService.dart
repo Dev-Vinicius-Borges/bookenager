@@ -68,13 +68,13 @@ class UsuarioService implements IUsuarioInterface {
               .eq("email", fazerLoginDto.email)
               .maybeSingle();
 
-      if(consulta == null){
+      if (consulta == null) {
         resposta.status = HttpStatus.notFound;
         resposta.mensagem = "Tente com outras credenciais.";
         return resposta;
       }
 
-      if(consulta["senha"] != fazerLoginDto.senha){
+      if (consulta["senha"] != fazerLoginDto.senha) {
         resposta.status = HttpStatus.unauthorized;
         resposta.mensagem = "E-mail ou senha incorretos.";
         return resposta;
@@ -82,8 +82,13 @@ class UsuarioService implements IUsuarioInterface {
 
       resposta.status = HttpStatus.accepted;
       resposta.mensagem = "Bem-vindo";
+      resposta.dados = UsuariosModel(
+        id: consulta['id'],
+        nome: consulta['nome'],
+        email: consulta['email'],
+        senha: consulta['senha'],
+      );
       return resposta;
-
     } catch (err) {
       resposta.status = 500;
       resposta.mensagem = "Erro no servidor: $err";
