@@ -1,10 +1,25 @@
+import 'package:bookio/Server/models/LivrosModel.dart';
+import 'package:bookio/Server/models/RespostaModel.dart';
+import 'package:bookio/Server/session/config.dart';
 import 'package:bookio/components/BottomNavbar.dart';
 import 'package:bookio/components/CriarLivro.dart';
+import 'package:bookio/components/Livros.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:bookio/Server/controllers/LivroController.dart';
 
 class BooksPage extends StatelessWidget {
+  Future<List<LivrosModel>> livrosDoUsuario(int? id) async{
+    var consulta = await LivroController().BuscarLivrosPorIdDoUsuario(id ?? 21);
+    var livros = consulta.dados ?? <LivrosModel>[];
+    print(livros);
+    return livros;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final id_usuario = Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
+    livrosDoUsuario(id_usuario);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -74,6 +89,11 @@ class BooksPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                    ListView(
+                      children: [
+                        Text("aaaaa"),
+                      ],
+                    )
                   ],
                 ),
               ),

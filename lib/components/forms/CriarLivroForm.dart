@@ -1,21 +1,19 @@
-import 'dart:io';
-
-import 'package:bookio/Server/controllers/UsuarioController.dart';
-import 'package:bookio/Server/dtos/Usuario/FazerLoginDto.dart';
 import 'package:bookio/Server/session/config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class CriarLivroForm extends StatefulWidget {
+  const CriarLivroForm({super.key});
 
   @override
-  State<Login> createState() => LoginState();
+  State<CriarLivroForm> createState() => _CriarLivroFormState();
 }
 
-class LoginState extends State<Login> {
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+class _CriarLivroFormState extends State<CriarLivroForm> {
+  TextEditingController tituloController = new TextEditingController();
+  TextEditingController autorController = new TextEditingController();
+  TextEditingController ultimaPaginaController = new TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -28,8 +26,8 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final id_usuario = Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
     return Container(
-      height: 237,
       alignment: Alignment.center,
       child: Form(
         key: _formKey,
@@ -38,10 +36,6 @@ class LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Entrar",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
@@ -52,8 +46,8 @@ class LoginState extends State<Login> {
                     ),
                     validator:
                         (String? value) =>
-                            !valueValidator(value) ? "Insira o email." : null,
-                    controller: emailController,
+                            !valueValidator(value) ? "Insira o título." : null,
+                    controller: tituloController,
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
                       enabledBorder: OutlineInputBorder(
@@ -71,11 +65,11 @@ class LoginState extends State<Login> {
                         borderSide: BorderSide(color: Colors.red),
                       ),
 
-                      hintText: 'E-mail',
+                      hintText: 'Ex. Duna',
                       filled: true,
                       alignLabelWithHint: true,
                       label: Text(
-                        "E-mail",
+                        "Título",
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
@@ -92,8 +86,10 @@ class LoginState extends State<Login> {
                     ),
                     validator:
                         (String? value) =>
-                            !valueValidator(value) ? "Insira a senha." : null,
-                    controller: passwordController,
+                            !valueValidator(value)
+                                ? "Insira o nome do autor."
+                                : null,
+                    controller: autorController,
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
                       enabledBorder: OutlineInputBorder(
@@ -111,11 +107,53 @@ class LoginState extends State<Login> {
                         borderSide: BorderSide(color: Colors.red),
                       ),
 
-                      hintText: '********',
+                      hintText: 'Ex. Frank Ebert',
                       filled: true,
                       alignLabelWithHint: true,
                       label: Text(
-                        "Senha",
+                        "Nome do autor",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
+                  height: 70,
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                    validator:
+                        (String? value) =>
+                            !valueValidator(value)
+                                ? "Insira a última página lida."
+                                : null,
+                    controller: ultimaPaginaController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 144, 144, 144),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 154, 154, 154),
+                          width: 2.0,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+
+                      hintText: 'Ex. 250',
+                      filled: true,
+                      alignLabelWithHint: true,
+                      label: Text(
+                        "Última página lida",
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
@@ -130,30 +168,7 @@ class LoginState extends State<Login> {
                   child: TextButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        FazerLoginDto loginDto = FazerLoginDto(
-                          email: emailController.text,
-                          senha: passwordController.text,
-                        );
 
-                        final login = await UsuarioController().FazerLogin(
-                          loginDto,
-                        );
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(login.mensagem.toString())),
-                        );
-
-                        if (login.status == HttpStatus.accepted) {
-                          Provider.of<GerenciadorDeSessao>(
-                            context,
-                            listen: false,
-                          ).setIdUsuario(login.dados!.id);
-                          Navigator.pushNamed(context, "/home");
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Preencha todos os campos.")),
-                        );
                       }
                     },
                     style: ButtonStyle(
@@ -167,7 +182,7 @@ class LoginState extends State<Login> {
                       ),
                     ),
                     child: Text(
-                      "Enviar",
+                      "Adicionar livro",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -175,36 +190,6 @@ class LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 5,
-                  children: [
-                    Text(
-                      "Não tem uma conta?",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/cadastro');
-                      },
-                      child: Text(
-                        "Cadastre-se",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],

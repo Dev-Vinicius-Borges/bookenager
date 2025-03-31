@@ -19,7 +19,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-        create: (context) => SessionManager()..loadSession(),
+        create: (context) => GerenciadorDeSessao()..loadSession(),
       child: MyApp(),
     )
   );

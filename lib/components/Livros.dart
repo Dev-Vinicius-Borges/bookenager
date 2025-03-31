@@ -19,7 +19,13 @@ class _LivrosState extends State<Livros>{
   @override
   Widget build(BuildContext context) {
     return Container(
-
+      child: Column(
+        children: [
+          Text(widget.titulo),
+          Text(widget.autor),
+          Text(widget.paginas_lidas),
+        ],
+      ),
     );
   }
 

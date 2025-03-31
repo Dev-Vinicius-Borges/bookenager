@@ -1,3 +1,4 @@
+import 'package:bookio/components/forms/CriarLivroForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -37,11 +38,12 @@ class Criarlivro extends StatelessWidget {
                   alignment: AlignmentDirectional(0, 1),
                   child: Container(
                     width: double.infinity,
-                    height: 300,
+                    height: 380,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(topRight: Radius.circular(24), topLeft: Radius.circular(24)),
                         color: Color.fromARGB(255, 20, 24, 27)
                     ),
+                    child: CriarLivroForm(),
                   ),
                 )
               ],

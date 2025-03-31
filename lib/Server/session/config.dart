@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SessionManager with ChangeNotifier{
+class GerenciadorDeSessao with ChangeNotifier{
   int? _id_usuario;
   int? get idUsuario => _id_usuario;
 

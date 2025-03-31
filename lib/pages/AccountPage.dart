@@ -8,7 +8,7 @@ class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int? id_usuario =
-        Provider.of<SessionManager>(context, listen: false).idUsuario;
+        Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
     return Scaffold(
       body: Container(
         width: double.infinity,
