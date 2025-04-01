@@ -60,14 +60,14 @@ class LivroService implements ILivroInterface {
       var livros = await Supabase.instance.client
           .from('livros')
           .select()
-          .eq("dono", id_usuario);
+          .eq("dono", id_usuario)
+          .eq('status', true);
 
       if (livros.isEmpty) {
         resposta.status = HttpStatus.notFound;
         resposta.mensagem = "Nenhum livro encontrado.";
         return resposta;
       }
-
 
       resposta.dados = livros;
       resposta.mensagem = "Livros encontrados.";

@@ -2,22 +2,36 @@ import 'package:bookio/Server/models/LivrosModel.dart';
 import 'package:bookio/Server/session/config.dart';
 import 'package:bookio/components/BottomNavbar.dart';
 import 'package:bookio/components/CriarLivro.dart';
+import 'package:bookio/components/Livros.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bookio/Server/controllers/LivroController.dart';
 
 class BooksPage extends StatelessWidget {
-  Future<List<LivrosModel>> livrosDoUsuario(int? id) async{
+  Future<List<Widget>> livrosDoUsuario(int? id) async {
     var consulta = await LivroController().BuscarLivrosPorIdDoUsuario(id ?? 21);
-    var livros = consulta.dados ?? <LivrosModel>[];
-    print("livros encontrados: ${livros}");
-    return livros;
+    var livros = consulta.dados ?? <Map<String, dynamic>>[];
+
+    var livrosMapeados =
+        livros
+            .map(
+              (livro) => Livros(
+                livro['id'],
+                livro['titulo'],
+                livro['autor'],
+                livro['paginas_lidas'],
+                livro['dono'],
+              ),
+            )
+            .toList();
+
+    return livrosMapeados;
   }
 
   @override
   Widget build(BuildContext context) {
-    final id_usuario = Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
-    livrosDoUsuario(id_usuario);
+    final id_usuario =
+        Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -87,11 +101,33 @@ class BooksPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    ListView(
-                      children: [
-                        Text("aaaaa"),
-                      ],
-                    )
+                    Expanded(
+                      child: FutureBuilder<List<Widget>>(
+                        future: livrosDoUsuario(id_usuario),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                "Erro ao carregar livro. ${snapshot.error}",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return Center(
+                              child: Text(
+                                "Nenhum livro encontrado.",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }
+                          return ListView(children: snapshot.data!);
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),

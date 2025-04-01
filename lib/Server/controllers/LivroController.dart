@@ -9,9 +9,8 @@ class LivroController {
     _service = new LivroService();
   }
 
-  Future<RespostaModel<List<LivrosModel>>> BuscarLivrosPorIdDoUsuario(int idUsuario) async{
+  Future<RespostaModel<List<Map<String, dynamic>>>> BuscarLivrosPorIdDoUsuario(int idUsuario) async{
     var busca = await _service.BuscarLivrosPorIdDoUsuario(idUsuario);
-    print("O que tá saindo do controller ${busca.dados}");
     return busca;
   }
 }
