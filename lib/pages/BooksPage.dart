@@ -1,9 +1,7 @@
 import 'package:bookio/Server/models/LivrosModel.dart';
-import 'package:bookio/Server/models/RespostaModel.dart';
 import 'package:bookio/Server/session/config.dart';
 import 'package:bookio/components/BottomNavbar.dart';
 import 'package:bookio/components/CriarLivro.dart';
-import 'package:bookio/components/Livros.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bookio/Server/controllers/LivroController.dart';
@@ -12,7 +10,7 @@ class BooksPage extends StatelessWidget {
   Future<List<LivrosModel>> livrosDoUsuario(int? id) async{
     var consulta = await LivroController().BuscarLivrosPorIdDoUsuario(id ?? 21);
     var livros = consulta.dados ?? <LivrosModel>[];
-    print(livros);
+    print("livros encontrados: ${livros}");
     return livros;
   }
 

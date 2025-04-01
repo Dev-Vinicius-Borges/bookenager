@@ -1,7 +1,7 @@
 class LivrosModel {
   final String titulo;
   final String autor;
-  final String paginas_lidas;
+  final int paginas_lidas;
   final int id_usuario;
 
   LivrosModel({

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:js_interop';
 
 import 'package:bookio/Server/abstracts/ILivroInterface.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
@@ -11,15 +12,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class LivroService implements ILivroInterface {
   @override
   Future<RespostaModel<LivrosModel>> AtualizarLivro(
-      AtualizarLivroDto atualizarLivroDto,) async {
+    AtualizarLivroDto atualizarLivroDto,
+  ) async {
     RespostaModel<LivrosModel> resposta = new RespostaModel();
     try {
       var livro =
-      await Supabase.instance.client
-          .from('livros')
-          .select()
-          .eq('id', atualizarLivroDto.id_livro)
-          .maybeSingle();
+          await Supabase.instance.client
+              .from('livros')
+              .select()
+              .eq('id', atualizarLivroDto.id_livro)
+              .maybeSingle();
 
       if (livro == null) {
         resposta.mensagem = "Livro não encontrado.";
@@ -33,16 +35,15 @@ class LivroService implements ILivroInterface {
           .eq('id', atualizarLivroDto.id_livro);
 
       resposta.dados = new LivrosModel(
-          titulo: atualizacao[0]['titulo'],
-          autor: atualizacao[0]['autor'],
-          paginas_lidas: atualizacao[0]['paginas_lidas'],
-          id_usuario: int.parse(atualizacao[0]['dono'])
+        titulo: atualizacao[0]['titulo'],
+        autor: atualizacao[0]['autor'],
+        paginas_lidas: atualizacao[0]['paginas_lidas'],
+        id_usuario: int.parse(atualizacao[0]['dono']),
       );
 
       resposta.status = HttpStatus.accepted;
       resposta.mensagem = "Livro atualizado com sucesso.";
       return resposta;
-      
     } catch (err) {
       resposta.status = HttpStatus.internalServerError;
       resposta.mensagem = "Erro no servidor: $err";
@@ -51,9 +52,10 @@ class LivroService implements ILivroInterface {
   }
 
   @override
-  Future<RespostaModel<List<LivrosModel>>> BuscarLivrosPorIdDoUsuario(
-      int id_usuario,) async {
-    RespostaModel<List<LivrosModel>> resposta = new RespostaModel();
+  Future<RespostaModel<List<Map<String, dynamic>>>> BuscarLivrosPorIdDoUsuario(
+    int id_usuario,
+  ) async {
+    RespostaModel<List<Map<String, dynamic>>> resposta = new RespostaModel();
     try {
       var livros = await Supabase.instance.client
           .from('livros')
@@ -67,35 +69,22 @@ class LivroService implements ILivroInterface {
       }
 
 
-      final List<LivrosModel> lista = [];
-
-      for (Map<String, dynamic> livro in livros) {
-        print(livro);
-        lista.add(
-          LivrosModel(
-            titulo: livro['titulo'],
-            autor: livro['autor'],
-            paginas_lidas: livro['paginas_lidas'],
-            id_usuario: int.parse(livro['id_usuario']),
-          ),
-        );
-      }
-
-      resposta.dados = lista;
+      resposta.dados = livros;
       resposta.mensagem = "Livros encontrados.";
       resposta.status = HttpStatus.found;
 
       return resposta;
     } catch (err) {
       resposta.status = HttpStatus.internalServerError;
-      resposta.mensagem = "Erro no servidor: $err";
+      resposta.mensagem = "Erro no servidor: ${err.toExternalReference}";
       return resposta;
     }
   }
 
   @override
   Future<RespostaModel<LivrosModel>> CriarNovoLivro(
-      CriarLivroDto criarLivroDto,) async {
+    CriarLivroDto criarLivroDto,
+  ) async {
     RespostaModel<LivrosModel> resposta = new RespostaModel();
     try {
       var livro = await Supabase.instance.client
@@ -122,7 +111,7 @@ class LivroService implements ILivroInterface {
       resposta.dados = LivrosModel(
         titulo: criarLivroDto.titulo,
         autor: criarLivroDto.autor,
-        paginas_lidas: criarLivroDto.paginas_lidas,
+        paginas_lidas: int.parse(criarLivroDto.paginas_lidas),
         id_usuario: int.parse(criarLivroDto.id_usuario),
       );
 

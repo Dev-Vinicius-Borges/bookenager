@@ -16,6 +16,8 @@ class BottomNavBar extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Container(
+            width: double.infinity,
+            height: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
