@@ -87,6 +87,7 @@ class LoginState extends State<Login> {
                 child: SizedBox(
                   height: 70,
                   child: TextFormField(
+                    obscureText: true,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                     ),
