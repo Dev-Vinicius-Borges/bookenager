@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:js_interop';
 
 import 'package:bookio/Server/abstracts/ILivroInterface.dart';
-import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
 import 'package:bookio/Server/dtos/livro/AtualizarLivroDto.dart';
 import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
 import 'package:bookio/Server/models/LivrosModel.dart';
@@ -29,17 +28,15 @@ class LivroService implements ILivroInterface {
         return resposta;
       }
 
-      final atualizacao = await Supabase.instance.client
+      await Supabase.instance.client
           .from('livros')
-          .select()
-          .eq('id', atualizarLivroDto.id_livro);
-
-      resposta.dados = new LivrosModel(
-        titulo: atualizacao[0]['titulo'],
-        autor: atualizacao[0]['autor'],
-        paginas_lidas: atualizacao[0]['paginas_lidas'],
-        id_usuario: int.parse(atualizacao[0]['dono']),
-      );
+          .update({
+            "paginas_lidas": atualizarLivroDto.paginas_lidas,
+            "autor": atualizarLivroDto.autor,
+            "titulo": atualizarLivroDto.titulo,
+          })
+          .eq('id', atualizarLivroDto.id_livro)
+          .eq('dono', atualizarLivroDto.id_usuario);
 
       resposta.status = HttpStatus.accepted;
       resposta.mensagem = "Livro atualizado com sucesso.";
@@ -93,16 +90,16 @@ class LivroService implements ILivroInterface {
           .eq('titulo', criarLivroDto.titulo)
           .eq('autor', criarLivroDto.autor);
 
-      if (livro.length > 1) {
+      if (livro.length > 0) {
         resposta.status = HttpStatus.conflict;
         resposta.mensagem = "Você já´cadastrou esse livro.";
         return resposta;
       }
 
       await Supabase.instance.client.from('livros').insert({
-        'criado_em': new DateTime.now(),
+        'criado_em': new DateTime.now().toUtc().toIso8601String(),
         'titulo': criarLivroDto.titulo,
-        'paginas_lidas': int.parse(criarLivroDto.paginas_lidas),
+        'paginas_lidas': criarLivroDto.paginas_lidas,
         'status': true,
         'dono': criarLivroDto.id_usuario,
         'autor': criarLivroDto.autor,
@@ -111,8 +108,8 @@ class LivroService implements ILivroInterface {
       resposta.dados = LivrosModel(
         titulo: criarLivroDto.titulo,
         autor: criarLivroDto.autor,
-        paginas_lidas: int.parse(criarLivroDto.paginas_lidas),
-        id_usuario: int.parse(criarLivroDto.id_usuario),
+        paginas_lidas: criarLivroDto.paginas_lidas,
+        id_usuario: criarLivroDto.id_usuario,
       );
 
       resposta.mensagem = "Livro criado com sucesso.";
@@ -129,30 +126,23 @@ class LivroService implements ILivroInterface {
   Future<RespostaModel<LivrosModel>> RemoverLivro(int id_livro) async {
     RespostaModel<LivrosModel> resposta = new RespostaModel();
     try {
-      var livro = await Supabase.instance.client
-          .from('livros')
-          .select()
-          .eq('id', id_livro);
+      var livro =
+          await Supabase.instance.client
+              .from('livros')
+              .select()
+              .eq('id', id_livro)
+              .maybeSingle();
 
-      if (livro.isEmpty) {
+      if (livro == null) {
         resposta.status = HttpStatus.notFound;
         resposta.mensagem = "Livro não encontrado.";
         return resposta;
       }
 
-      await Supabase.instance.client
-          .from('livros')
-          .update({'status': false})
-          .eq('id', id_livro);
+      await Supabase.instance.client.from('livros').delete().eq("id", id_livro);
 
       resposta.status = HttpStatus.accepted;
-      resposta.mensagem = "Livro atualizado.";
-      resposta.dados = new LivrosModel(
-        titulo: livro[0]['titulo'],
-        autor: livro[0]['autor'],
-        paginas_lidas: livro[0]['paginas_lidas'],
-        id_usuario: int.parse(livro[0]['dono']),
-      );
+      resposta.mensagem = "Livro removido.";
 
       return resposta;
     } catch (err) {
