@@ -45,12 +45,27 @@ class _EditarLivroState extends State<EditarLivro> {
               ),
               child: Padding(
                 padding: EdgeInsets.only(top: 16, left: 16),
-                child: Text(
-                  "Editar\nlivro",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
+                child: Align(
+                  alignment: AlignmentDirectional(0, -1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Editar\nlivro",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close, size: 32, color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -24,9 +24,28 @@ class Criarlivro extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.only(top: 16, left: 16),
-                child: Text(
-                  "Adicionar\nnovo\nlivro",
-                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w700),
+                child: Align(
+                  alignment: AlignmentDirectional(0, -1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Adicionar\nnovo\nlivro",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close, size: 32, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -41,15 +60,18 @@ class Criarlivro extends StatelessWidget {
                     width: double.infinity,
                     height: 380,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topRight: Radius.circular(24), topLeft: Radius.circular(24)),
-                        color: Color.fromARGB(255, 20, 24, 27)
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(24),
+                        topLeft: Radius.circular(24),
+                      ),
+                      color: Color.fromARGB(255, 20, 24, 27),
                     ),
                     child: CriarLivroForm(),
                   ),
-                )
+                ),
               ],
-            )
-          )
+            ),
+          ),
         ],
       ),
     );
