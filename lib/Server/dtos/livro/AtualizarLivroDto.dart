@@ -2,7 +2,7 @@ class AtualizarLivroDto {
   final int id_livro;
   final String titulo;
   final String autor;
-  final String paginas_lidas;
+  final int paginas_lidas;
   final int id_usuario;
 
   AtualizarLivroDto({
