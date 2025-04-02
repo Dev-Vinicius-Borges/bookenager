@@ -238,7 +238,7 @@ class _EditarLivroFormState extends State<EditarLivroForm> {
                       ),
                     ),
                     child: Text(
-                      "Adicionar livro",
+                      "Editar livro",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
