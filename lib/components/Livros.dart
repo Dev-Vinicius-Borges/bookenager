@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:bookio/Server/controllers/LivroController.dart';
+import 'package:bookio/components/EditarLivro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -101,7 +105,20 @@ class _LivrosState extends State<Livros> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return EditarLivro(
+                                widget.id_livro,
+                                widget.titulo,
+                                widget.autor,
+                                widget.paginas_lidas,
+                                widget.id_usuario,
+                              );
+                            },
+                          );
+                        },
                         icon: Icon(
                           Icons.edit_note_rounded,
                           size: 24,
@@ -117,7 +134,23 @@ class _LivrosState extends State<Livros> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final remocao = await new LivroController()
+                              .RemoverLivro(widget.id_livro);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                remocao.mensagem.toString(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+
+                          if (remocao.status == HttpStatus.accepted) {
+                            Navigator.pushReplacementNamed(context, "/home");
+                          }
+                        },
                         icon: Icon(
                           Icons.delete,
                           size: 24,
