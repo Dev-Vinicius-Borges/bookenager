@@ -1,3 +1,11 @@
+import 'dart:io';
+
+import 'package:bookio/Server/controllers/LivroController.dart';
+import 'package:bookio/Server/controllers/UsuarioController.dart';
+import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
+import 'package:bookio/Server/models/LivrosModel.dart';
+import 'package:bookio/Server/models/RespostaModel.dart';
+import 'package:bookio/Server/models/UsuariosModel.dart';
 import 'package:bookio/Server/session/config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -168,6 +176,22 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                   child: TextButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        CriarLivroDto novoLivro = new CriarLivroDto(
+                            titulo: tituloController.text,
+                            autor: autorController.text,
+                            paginas_lidas: int.parse(ultimaPaginaController.text),
+                            id_usuario: id_usuario!
+                        );
+
+                        final criacao = await new LivroController().criarNovoLivro(novoLivro);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(criacao.mensagem.toString())),
+                        );
+
+                        if(criacao.status == HttpStatus.created){
+                          Navigator.pushReplacementNamed(context, "/home");
+                        }
 
                       }
                     },
