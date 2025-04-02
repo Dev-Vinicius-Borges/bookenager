@@ -1,8 +1,8 @@
 class CriarLivroDto {
   final String titulo;
   final String autor;
-  final String paginas_lidas;
-  final String id_usuario;
+  final int paginas_lidas;
+  final int id_usuario;
 
   CriarLivroDto({
     required this.titulo,
