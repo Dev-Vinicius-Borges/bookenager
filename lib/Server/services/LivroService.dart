@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:js_interop';
-
 import 'package:bookio/Server/abstracts/ILivroInterface.dart';
 import 'package:bookio/Server/dtos/livro/AtualizarLivroDto.dart';
 import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
@@ -13,7 +11,7 @@ class LivroService implements ILivroInterface {
   Future<RespostaModel<LivrosModel>> AtualizarLivro(
     AtualizarLivroDto atualizarLivroDto,
   ) async {
-    RespostaModel<LivrosModel> resposta = new RespostaModel();
+    RespostaModel<LivrosModel> resposta = RespostaModel();
     try {
       var livro =
           await Supabase.instance.client
@@ -50,14 +48,14 @@ class LivroService implements ILivroInterface {
 
   @override
   Future<RespostaModel<List<Map<String, dynamic>>>> BuscarLivrosPorIdDoUsuario(
-    int id_usuario,
+    int idUsuario,
   ) async {
-    RespostaModel<List<Map<String, dynamic>>> resposta = new RespostaModel();
+    RespostaModel<List<Map<String, dynamic>>> resposta = RespostaModel();
     try {
       var livros = await Supabase.instance.client
           .from('livros')
           .select()
-          .eq("dono", id_usuario)
+          .eq("dono", idUsuario)
           .eq('status', true);
 
       if (livros.isEmpty) {
@@ -73,7 +71,7 @@ class LivroService implements ILivroInterface {
       return resposta;
     } catch (err) {
       resposta.status = HttpStatus.internalServerError;
-      resposta.mensagem = "Erro no servidor: ${err.toExternalReference}";
+      resposta.mensagem = "Erro no servidor: $err";
       return resposta;
     }
   }
@@ -82,7 +80,7 @@ class LivroService implements ILivroInterface {
   Future<RespostaModel<LivrosModel>> CriarNovoLivro(
     CriarLivroDto criarLivroDto,
   ) async {
-    RespostaModel<LivrosModel> resposta = new RespostaModel();
+    RespostaModel<LivrosModel> resposta = RespostaModel();
     try {
       var livro = await Supabase.instance.client
           .from('livros')
@@ -90,14 +88,15 @@ class LivroService implements ILivroInterface {
           .eq('titulo', criarLivroDto.titulo)
           .eq('autor', criarLivroDto.autor);
 
-      if (livro.length > 0) {
+
+      if (livro.isNotEmpty) {
         resposta.status = HttpStatus.conflict;
-        resposta.mensagem = "Você já´cadastrou esse livro.";
+        resposta.mensagem = "Você já cadastrou esse livro.";
         return resposta;
       }
 
       await Supabase.instance.client.from('livros').insert({
-        'criado_em': new DateTime.now().toUtc().toIso8601String(),
+        'criado_em': DateTime.now().toUtc().toIso8601String(),
         'titulo': criarLivroDto.titulo,
         'paginas_lidas': criarLivroDto.paginas_lidas,
         'status': true,
@@ -123,14 +122,14 @@ class LivroService implements ILivroInterface {
   }
 
   @override
-  Future<RespostaModel<LivrosModel>> RemoverLivro(int id_livro) async {
-    RespostaModel<LivrosModel> resposta = new RespostaModel();
+  Future<RespostaModel<LivrosModel>> RemoverLivro(int idLivro) async {
+    RespostaModel<LivrosModel> resposta = RespostaModel();
     try {
       var livro =
           await Supabase.instance.client
               .from('livros')
               .select()
-              .eq('id', id_livro)
+              .eq('id', idLivro)
               .maybeSingle();
 
       if (livro == null) {
@@ -139,7 +138,7 @@ class LivroService implements ILivroInterface {
         return resposta;
       }
 
-      await Supabase.instance.client.from('livros').delete().eq("id", id_livro);
+      await Supabase.instance.client.from('livros').delete().eq("id", idLivro);
 
       resposta.status = HttpStatus.accepted;
       resposta.mensagem = "Livro removido.";

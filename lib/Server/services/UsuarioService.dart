@@ -4,7 +4,6 @@ import 'package:bookio/Server/abstracts/IUsuarioInterface.dart';
 import 'package:bookio/Server/dtos/Usuario/AtualizarUsuarioDto.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
 import 'package:bookio/Server/dtos/Usuario/FazerLoginDto.dart';
-import 'package:bookio/Server/dtos/livro/AtualizarLivroDto.dart';
 import 'package:bookio/Server/models/RespostaModel.dart';
 import 'package:bookio/Server/models/UsuariosModel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -20,7 +19,7 @@ class UsuarioService implements IUsuarioInterface {
   Future<RespostaModel<UsuariosModel>> CriarUsuario(
     CriarUsuarioDto criarUsuarioDto,
   ) async {
-    RespostaModel<UsuariosModel> resposta = new RespostaModel();
+    RespostaModel<UsuariosModel> resposta = RespostaModel();
     try {
       var consulta =
           await Supabase.instance.client
@@ -51,7 +50,7 @@ class UsuarioService implements IUsuarioInterface {
       return resposta;
     } catch (err) {
       resposta.status = HttpStatus.internalServerError;
-      resposta.mensagem = "Erro: ${err}";
+      resposta.mensagem = "Erro: $err";
       print(err);
       return resposta;
     }
@@ -61,7 +60,7 @@ class UsuarioService implements IUsuarioInterface {
   Future<RespostaModel<UsuariosModel>> FazerLogin(
     FazerLoginDto fazerLoginDto,
   ) async {
-    RespostaModel<UsuariosModel> resposta = new RespostaModel();
+    RespostaModel<UsuariosModel> resposta = RespostaModel();
     try {
       final consulta =
           await Supabase.instance.client
@@ -102,7 +101,7 @@ class UsuarioService implements IUsuarioInterface {
   Future<RespostaModel<UsuariosModel>> AtualizarUsuario(
     AtualizarUsuarioDto atualizarUsuarioDto,
   ) async {
-    RespostaModel<UsuariosModel> resposta = new RespostaModel<UsuariosModel>();
+    RespostaModel<UsuariosModel> resposta = RespostaModel<UsuariosModel>();
     try {
       final usuario =
           await Supabase.instance.client
@@ -125,7 +124,7 @@ class UsuarioService implements IUsuarioInterface {
 
       resposta.mensagem = "Usuário atualizado com sucesso.";
       resposta.status = HttpStatus.accepted;
-      resposta.dados = new UsuariosModel(
+      resposta.dados = UsuariosModel(
         id: atualizarUsuarioDto.id,
         nome: atualizarUsuarioDto.nome,
         email: atualizarUsuarioDto.email,
@@ -142,7 +141,7 @@ class UsuarioService implements IUsuarioInterface {
 
   @override
   Future<RespostaModel<UsuariosModel>> BuscarUsuarioPorId(int idUsuario) async{
-    RespostaModel<UsuariosModel> resposta = new RespostaModel<UsuariosModel>();
+    RespostaModel<UsuariosModel> resposta = RespostaModel<UsuariosModel>();
     try {
       final usuario =
           await Supabase.instance.client
@@ -159,7 +158,7 @@ class UsuarioService implements IUsuarioInterface {
 
       resposta.mensagem = "Usuário encontrado.";
       resposta.status = HttpStatus.found;
-      resposta.dados = new UsuariosModel(
+      resposta.dados = UsuariosModel(
           id: usuario['id'],
           nome: usuario['nome'],
           email: usuario['email'],
