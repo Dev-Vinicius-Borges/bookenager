@@ -8,7 +8,7 @@ class UsuarioController{
   late UsuarioService _service;
 
   UsuarioController(){
-    _service = new UsuarioService();
+    _service = UsuarioService();
   }
 
   Future<RespostaModel<UsuariosModel>> CriarUsuario(CriarUsuarioDto criarUsuarioDto) async{

@@ -1,6 +1,4 @@
-import 'package:bookio/components/forms/CriarLivroForm.dart';
 import 'package:bookio/components/forms/EditarLivroForm.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EditarLivro extends StatefulWidget {
@@ -26,7 +24,7 @@ class EditarLivro extends StatefulWidget {
 class _EditarLivroState extends State<EditarLivro> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 500,
       child: Stack(

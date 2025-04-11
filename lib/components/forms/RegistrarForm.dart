@@ -12,9 +12,13 @@ class Registrar extends StatefulWidget {
 }
 
 class RegistrarState extends State<Registrar> {
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController cepController = TextEditingController();
+  TextEditingController ruaController = TextEditingController();
+  TextEditingController cidadeController = TextEditingController();
+  TextEditingController estadoController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -156,6 +160,169 @@ class RegistrarState extends State<Registrar> {
                       alignLabelWithHint: true,
                       label: Text(
                         "Senha",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
+                  height: 70,
+                  child: TextFormField(
+                    onChanged: (cepDigitado){
+
+                    },
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                    validator:
+                        (String? value) =>
+                            !valueValidator(value) ? "Insira o CEP." : null,
+                    controller: cepController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 144, 144, 144),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 154, 154, 154),
+                          width: 2.0,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+
+                      hintText: 'XXXXXXXX',
+                      filled: true,
+                      alignLabelWithHint: true,
+                      label: Text(
+                        "CEP",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
+                  height: 70,
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                    validator:
+                        (String? value) =>
+                            !valueValidator(value) ? "Insira a rua." : null,
+                    controller: ruaController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 144, 144, 144),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 154, 154, 154),
+                          width: 2.0,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+
+                      hintText: 'Rua X',
+                      filled: true,
+                      alignLabelWithHint: true,
+                      label: Text(
+                        "Rua",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
+                  height: 70,
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                    validator:
+                        (String? value) =>
+                            !valueValidator(value) ? "Insira a cidade." : null,
+                    controller: cidadeController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 144, 144, 144),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 154, 154, 154),
+                          width: 2.0,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+
+                      hintText: 'Cidade X',
+                      filled: true,
+                      alignLabelWithHint: true,
+                      label: Text(
+                        "Cidade",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
+                  height: 70,
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                    validator:
+                        (String? value) =>
+                            !valueValidator(value) ? "Insira o estado." : null,
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 144, 144, 144),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 154, 154, 154),
+                          width: 2.0,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+
+                      hintText: 'Estado X',
+                      filled: true,
+                      alignLabelWithHint: true,
+                      label: Text(
+                        "Estado",
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),

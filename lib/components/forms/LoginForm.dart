@@ -14,8 +14,8 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 

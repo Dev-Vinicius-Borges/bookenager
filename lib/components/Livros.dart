@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bookio/Server/controllers/LivroController.dart';
 import 'package:bookio/components/EditarLivro.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Livros extends StatefulWidget {
@@ -135,7 +134,7 @@ class _LivrosState extends State<Livros> {
                       ),
                       child: IconButton(
                         onPressed: () async {
-                          final remocao = await new LivroController()
+                          final remocao = await LivroController()
                               .RemoverLivro(widget.id_livro);
 
                           ScaffoldMessenger.of(context).showSnackBar(

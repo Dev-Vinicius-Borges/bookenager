@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
+  const BottomNavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     final String rota = ModalRoute.of(context)?.settings.name ?? '';
@@ -15,7 +17,7 @@ class BottomNavBar extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.all(16),
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: Row(

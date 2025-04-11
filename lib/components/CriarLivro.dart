@@ -1,11 +1,12 @@
 import 'package:bookio/components/forms/CriarLivroForm.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Criarlivro extends StatelessWidget {
+  const Criarlivro({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 500,
       child: Stack(

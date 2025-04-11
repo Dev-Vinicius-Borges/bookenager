@@ -1,14 +1,8 @@
 import 'dart:io';
 
 import 'package:bookio/Server/controllers/LivroController.dart';
-import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/livro/AtualizarLivroDto.dart';
-import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
-import 'package:bookio/Server/models/LivrosModel.dart';
-import 'package:bookio/Server/models/RespostaModel.dart';
-import 'package:bookio/Server/models/UsuariosModel.dart';
 import 'package:bookio/Server/session/config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,9 +27,9 @@ class EditarLivroForm extends StatefulWidget {
 }
 
 class _EditarLivroFormState extends State<EditarLivroForm> {
-  TextEditingController tituloController = new TextEditingController();
-  TextEditingController autorController = new TextEditingController();
-  TextEditingController ultimaPaginaController = new TextEditingController();
+  TextEditingController tituloController = TextEditingController();
+  TextEditingController autorController = TextEditingController();
+  TextEditingController ultimaPaginaController = TextEditingController();
 
   @override
   void initState() {
@@ -56,7 +50,7 @@ class _EditarLivroFormState extends State<EditarLivroForm> {
 
   @override
   Widget build(BuildContext context) {
-    final id_usuario =
+    final idUsuario =
         Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
     return Container(
       alignment: Alignment.center,
@@ -200,7 +194,7 @@ class _EditarLivroFormState extends State<EditarLivroForm> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         AtualizarLivroDto livroAtualizado =
-                            new AtualizarLivroDto(
+                            AtualizarLivroDto(
                               id_livro: widget.id_livro,
                               titulo: tituloController.text,
                               autor: autorController.text,
@@ -210,7 +204,7 @@ class _EditarLivroFormState extends State<EditarLivroForm> {
                               id_usuario: widget.id_usuario,
                             );
 
-                        final atualizacao = await new LivroController()
+                        final atualizacao = await LivroController()
                             .AtualizarLivro(livroAtualizado);
 
                         ScaffoldMessenger.of(context).showSnackBar(

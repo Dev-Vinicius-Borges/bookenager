@@ -3,13 +3,12 @@ import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
 import 'package:bookio/Server/models/LivrosModel.dart';
 import 'package:bookio/Server/models/RespostaModel.dart';
 import 'package:bookio/Server/services/LivroService.dart';
-import 'package:bookio/components/Livros.dart';
 
 class LivroController {
   late LivroService _service;
 
   LivroController() {
-    _service = new LivroService();
+    _service = LivroService();
   }
 
   Future<RespostaModel<List<Map<String, dynamic>>>> BuscarLivrosPorIdDoUsuario(
@@ -26,8 +25,8 @@ class LivroController {
     return criacao;
   }
 
-  Future<RespostaModel<LivrosModel>> RemoverLivro(int id_livro) async {
-    var remocao = await _service.RemoverLivro(id_livro);
+  Future<RespostaModel<LivrosModel>> RemoverLivro(int idLivro) async {
+    var remocao = await _service.RemoverLivro(idLivro);
     return remocao;
   }
 

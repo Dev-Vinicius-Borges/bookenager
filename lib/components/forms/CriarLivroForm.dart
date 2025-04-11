@@ -1,13 +1,8 @@
 import 'dart:io';
 
 import 'package:bookio/Server/controllers/LivroController.dart';
-import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
-import 'package:bookio/Server/models/LivrosModel.dart';
-import 'package:bookio/Server/models/RespostaModel.dart';
-import 'package:bookio/Server/models/UsuariosModel.dart';
 import 'package:bookio/Server/session/config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,9 +14,9 @@ class CriarLivroForm extends StatefulWidget {
 }
 
 class _CriarLivroFormState extends State<CriarLivroForm> {
-  TextEditingController tituloController = new TextEditingController();
-  TextEditingController autorController = new TextEditingController();
-  TextEditingController ultimaPaginaController = new TextEditingController();
+  TextEditingController tituloController = TextEditingController();
+  TextEditingController autorController = TextEditingController();
+  TextEditingController ultimaPaginaController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -34,7 +29,7 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
 
   @override
   Widget build(BuildContext context) {
-    final id_usuario = Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
+    final idUsuario = Provider.of<GerenciadorDeSessao>(context, listen: false).idUsuario;
     return Container(
       alignment: Alignment.center,
       child: Form(
@@ -176,14 +171,14 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                   child: TextButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        CriarLivroDto novoLivro = new CriarLivroDto(
+                        CriarLivroDto novoLivro = CriarLivroDto(
                             titulo: tituloController.text,
                             autor: autorController.text,
                             paginas_lidas: int.parse(ultimaPaginaController.text),
-                            id_usuario: id_usuario!
+                            id_usuario: idUsuario!
                         );
 
-                        final criacao = await new LivroController().criarNovoLivro(novoLivro);
+                        final criacao = await LivroController().criarNovoLivro(novoLivro);
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(criacao.mensagem.toString())),
