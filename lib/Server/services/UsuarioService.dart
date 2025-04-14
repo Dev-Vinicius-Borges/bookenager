@@ -88,6 +88,7 @@ class UsuarioService implements IUsuarioInterface {
         nome: consulta['nome'],
         email: consulta['email'],
         senha: consulta['senha'],
+        endereco: consulta['endereco'],
       );
       return resposta;
     } catch (err) {
@@ -129,6 +130,7 @@ class UsuarioService implements IUsuarioInterface {
         nome: atualizarUsuarioDto.nome,
         email: atualizarUsuarioDto.email,
         senha: atualizarUsuarioDto.senha,
+        endereco: atualizarUsuarioDto.endereco,
       );
 
       return resposta;
@@ -140,7 +142,7 @@ class UsuarioService implements IUsuarioInterface {
   }
 
   @override
-  Future<RespostaModel<UsuariosModel>> BuscarUsuarioPorId(int idUsuario) async{
+  Future<RespostaModel<UsuariosModel>> BuscarUsuarioPorId(int idUsuario) async {
     RespostaModel<UsuariosModel> resposta = RespostaModel<UsuariosModel>();
     try {
       final usuario =
@@ -150,7 +152,7 @@ class UsuarioService implements IUsuarioInterface {
               .eq('id', idUsuario)
               .maybeSingle();
 
-      if (usuario == null){
+      if (usuario == null) {
         resposta.status = HttpStatus.notFound;
         resposta.mensagem = "Usuário não encontrado.";
         return resposta;
@@ -159,14 +161,14 @@ class UsuarioService implements IUsuarioInterface {
       resposta.mensagem = "Usuário encontrado.";
       resposta.status = HttpStatus.found;
       resposta.dados = UsuariosModel(
-          id: usuario['id'],
-          nome: usuario['nome'],
-          email: usuario['email'],
-          senha: usuario['senha']
+        id: usuario['id'],
+        nome: usuario['nome'],
+        email: usuario['email'],
+        senha: usuario['senha'],
+        endereco: usuario['endereco'],
       );
 
       return resposta;
-
     } catch (err) {
       resposta.status = 500;
       resposta.mensagem = "Erro no servidor: $err";
