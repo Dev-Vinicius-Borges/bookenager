@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:bookio/Server/controllers/EnderecoController.dart';
 import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
+import 'package:bookio/Server/dtos/endereco/CriarEnderecoDto.dart';
 import 'package:flutter/material.dart';
 
 class Registrar extends StatefulWidget {
@@ -171,9 +173,7 @@ class RegistrarState extends State<Registrar> {
                 child: SizedBox(
                   height: 70,
                   child: TextFormField(
-                    onChanged: (cepDigitado){
-
-                    },
+                    onChanged: (cepDigitado) {},
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                     ),
@@ -300,7 +300,7 @@ class RegistrarState extends State<Registrar> {
                     validator:
                         (String? value) =>
                             !valueValidator(value) ? "Insira o estado." : null,
-                    controller: passwordController,
+                    controller: estadoController,
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
                       enabledBorder: OutlineInputBorder(
@@ -336,29 +336,40 @@ class RegistrarState extends State<Registrar> {
                   height: 40,
                   child: TextButton(
                     onPressed: () async {
-                      if(_formKey.currentState!.validate()){
-                        CriarUsuarioDto usuario = CriarUsuarioDto(
+                      if (_formKey.currentState!.validate()) {
+                        CriarEnderecoDto novoEndereco = CriarEnderecoDto(
+                          cep: int.parse(cepController.text),
+                          rua: ruaController.text,
+                          cidade: cidadeController.text,
+                          estado: estadoController.text,
+                        );
+
+                        final criacaoEndereco = await EnderecoController()
+                            .CriarEndereco(novoEndereco);
+
+                        CriarUsuarioDto novoUsuario = CriarUsuarioDto(
                           nome: nameController.text,
                           email: emailController.text,
                           senha: passwordController.text,
+                          endereco: criacaoEndereco.dados!.id,
                         );
 
-                        final criacao = await UsuarioController().CriarUsuario(
-                          usuario,
-                        );
+                        final criacaoUsuario = await UsuarioController()
+                            .CriarUsuario(novoUsuario);
 
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(criacao.mensagem.toString())),
+                          SnackBar(
+                            content: Text(criacaoUsuario.mensagem.toString()),
+                          ),
                         );
-
-                        if (criacao.status == HttpStatus.created) {
-                          Navigator.pushNamed(context, "/login");
-                        }
-                      }else{
+                      } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Por favor, preencha todos os campos corretamente.")),
+                          SnackBar(
+                            content: Text(
+                              "Por favor, preencha todos os campos corretamente.",
+                            ),
+                          ),
                         );
-
                       }
                     },
                     style: ButtonStyle(
