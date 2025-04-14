@@ -1,10 +1,10 @@
-import 'dart:io';
-
+import 'dart:convert';
 import 'package:bookio/Server/controllers/EnderecoController.dart';
 import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
 import 'package:bookio/Server/dtos/endereco/CriarEnderecoDto.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Registrar extends StatefulWidget {
   const Registrar({super.key});
@@ -29,6 +29,21 @@ class RegistrarState extends State<Registrar> {
       return false;
     }
     return true;
+  }
+
+  buscarEndereco(String cep) async {
+    final url = Uri.https("viacep.com.br", "ws/$cep/json/");
+    var response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      return;
+    }
+
+    final dados = jsonDecode(response.body);
+
+    ruaController.text = dados['logradouro'];
+    cidadeController.text = dados['localidade'];
+    estadoController.text = dados['estado'];
   }
 
   @override
@@ -173,13 +188,23 @@ class RegistrarState extends State<Registrar> {
                 child: SizedBox(
                   height: 70,
                   child: TextFormField(
-                    onChanged: (cepDigitado) {},
+                    onChanged: (cepDigitado) {
+                      buscarEndereco(cepDigitado);
+                    },
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                     ),
-                    validator:
-                        (String? value) =>
-                            !valueValidator(value) ? "Insira o CEP." : null,
+                    validator: (String? value) {
+                      if (!valueValidator(value)) {
+                        return "Insira o CEP.";
+                      }
+                      if (value!.length < 8 || value!.length > 8) {
+                        return "Digite o CEP corretamente.";
+                      }
+
+                      return null;
+                    },
+
                     controller: cepController,
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
@@ -356,6 +381,7 @@ class RegistrarState extends State<Registrar> {
 
                         final criacaoUsuario = await UsuarioController()
                             .CriarUsuario(novoUsuario);
+
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

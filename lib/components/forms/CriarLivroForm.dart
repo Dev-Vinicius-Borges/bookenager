@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:bookio/Server/controllers/GeneroLiterarioController.dart';
 import 'package:bookio/Server/controllers/LivroController.dart';
 import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
+import 'package:bookio/Server/models/EnderecoModel.dart';
+import 'package:bookio/Server/models/GeneroLiterarioModel.dart';
 import 'package:bookio/Server/session/config.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,9 +18,13 @@ class CriarLivroForm extends StatefulWidget {
 }
 
 class _CriarLivroFormState extends State<CriarLivroForm> {
+  late List<String> items = [];
   TextEditingController tituloController = TextEditingController();
   TextEditingController autorController = TextEditingController();
   TextEditingController ultimaPaginaController = TextEditingController();
+  TextEditingController generoController = TextEditingController();
+  String? selecionado;
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -25,6 +33,19 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
       return false;
     }
     return true;
+  }
+
+  Future<void> buscarGenerosLiterarios() async{
+    final generos = await GeneroLiterarioController().BuscarGeneros();
+    setState(() {
+      items = generos.dados!.map((genero) => genero.nome).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    buscarGenerosLiterarios();
   }
 
   @override
@@ -118,6 +139,38 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
+                  height: 70,
+                  child:  DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                          hint: Text(
+                            "Selecione o gênero",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          items: items
+                              .map((item) => DropdownMenuItem(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ))
+                              .toList(),
+                        value: selecionado,
+                        onChanged: (value) {
+                          setState(() {
+                            selecionado = value;
+                          });
+                        },
+                      )
                   ),
                 ),
               ),

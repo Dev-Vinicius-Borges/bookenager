@@ -8,14 +8,14 @@ class Criarlivro extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 500,
+      height: 570,
       child: Stack(
         children: [
           Align(
             alignment: AlignmentDirectional(0, 1),
             child: Container(
               width: double.infinity,
-              height: 500,
+              height: 570,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 104, 64, 237),
                 borderRadius: BorderRadius.only(
@@ -59,7 +59,7 @@ class Criarlivro extends StatelessWidget {
                   alignment: AlignmentDirectional(0, 1),
                   child: Container(
                     width: double.infinity,
-                    height: 380,
+                    height: 450,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(24),

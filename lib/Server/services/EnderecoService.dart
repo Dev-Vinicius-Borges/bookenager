@@ -105,6 +105,7 @@ class EnderecoService implements IEnderecoInterface {
               .select()
               .eq('cep', criarEnderecoDto.cep)
               .maybeSingle();
+
       if (enderecoSemelhante != null) {
         resposta.status = HttpStatus.conflict;
         resposta.mensagem = "Endereço já existe";
@@ -130,10 +131,11 @@ class EnderecoService implements IEnderecoInterface {
               .select()
               .single();
 
+
       resposta.status = HttpStatus.created;
       resposta.mensagem = "Endereço criado com sucesso";
-      resposta.dados = EnderecoModel(
-        id: novoEndereco['id'],
+      resposta.dados = new EnderecoModel(
+        id: int.parse(novoEndereco['id']),
         cep: novoEndereco['cep'],
         rua: novoEndereco['rua'],
         cidade: novoEndereco['cidade'],

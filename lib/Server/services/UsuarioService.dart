@@ -40,6 +40,7 @@ class UsuarioService implements IUsuarioInterface {
             "nome": criarUsuarioDto.nome,
             "email": criarUsuarioDto.email,
             "senha": criarUsuarioDto.senha,
+            "endereco": criarUsuarioDto.endereco,
           })
           .select()
           .single();
@@ -51,7 +52,6 @@ class UsuarioService implements IUsuarioInterface {
     } catch (err) {
       resposta.status = HttpStatus.internalServerError;
       resposta.mensagem = "Erro: $err";
-      print(err);
       return resposta;
     }
   }
