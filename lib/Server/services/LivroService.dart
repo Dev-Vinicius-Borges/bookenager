@@ -7,6 +7,11 @@ import 'package:bookio/Server/models/RespostaModel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LivroService implements ILivroInterface {
+  late SupabaseClient _contexto;
+  LivroService([SupabaseClient? cliente]){
+    _contexto = cliente ?? Supabase.instance.client;
+  }
+
   @override
   Future<RespostaModel<LivrosModel>> AtualizarLivro(
     AtualizarLivroDto atualizarLivroDto,
@@ -14,7 +19,7 @@ class LivroService implements ILivroInterface {
     RespostaModel<LivrosModel> resposta = RespostaModel();
     try {
       var livro =
-          await Supabase.instance.client
+          await _contexto
               .from('livros')
               .select()
               .eq('id', atualizarLivroDto.id_livro)
@@ -26,7 +31,7 @@ class LivroService implements ILivroInterface {
         return resposta;
       }
 
-      await Supabase.instance.client
+      await _contexto
           .from('livros')
           .update({
             "paginas_lidas": atualizarLivroDto.paginas_lidas,
@@ -52,7 +57,7 @@ class LivroService implements ILivroInterface {
   ) async {
     RespostaModel<List<Map<String, dynamic>>> resposta = RespostaModel();
     try {
-      var livros = await Supabase.instance.client
+      var livros = await _contexto
           .from('livros')
           .select()
           .eq("dono", idUsuario)
@@ -82,7 +87,7 @@ class LivroService implements ILivroInterface {
   ) async {
     RespostaModel<LivrosModel> resposta = RespostaModel();
     try {
-      var livro = await Supabase.instance.client
+      var livro = await _contexto
           .from('livros')
           .select()
           .eq('titulo', criarLivroDto.titulo)
@@ -95,7 +100,7 @@ class LivroService implements ILivroInterface {
         return resposta;
       }
 
-      await Supabase.instance.client.from('livros').insert({
+      await _contexto.from('livros').insert({
         'criado_em': DateTime.now().toUtc().toIso8601String(),
         'titulo': criarLivroDto.titulo,
         'paginas_lidas': criarLivroDto.paginas_lidas,
@@ -126,7 +131,7 @@ class LivroService implements ILivroInterface {
     RespostaModel<LivrosModel> resposta = RespostaModel();
     try {
       var livro =
-          await Supabase.instance.client
+          await _contexto
               .from('livros')
               .select()
               .eq('id', idLivro)
@@ -138,7 +143,7 @@ class LivroService implements ILivroInterface {
         return resposta;
       }
 
-      await Supabase.instance.client.from('livros').delete().eq("id", idLivro);
+      await _contexto.from('livros').delete().eq("id", idLivro);
 
       resposta.status = HttpStatus.accepted;
       resposta.mensagem = "Livro removido.";
