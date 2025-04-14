@@ -1,3 +1,4 @@
+import 'package:bookio/Server/dtos/Usuario/AtualizarUsuarioDto.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
 import 'package:bookio/Server/dtos/Usuario/FazerLoginDto.dart';
 import 'package:bookio/Server/models/RespostaModel.dart';
@@ -17,5 +18,20 @@ class UsuarioController{
 
   Future<RespostaModel<UsuariosModel>> FazerLogin(FazerLoginDto fazerLoginDto) async{
     return await _service.FazerLogin(fazerLoginDto);
+  }
+
+  Future<RespostaModel<UsuariosModel>> BuscarUsuarioPorEmail(String email) async{
+    final busca = await _service.BuscarUsuarioPorEmail(email);
+    return busca;
+  }
+
+  Future<RespostaModel<UsuariosModel>> AtualizarUsuario(AtualizarUsuarioDto atualizarUsuarioDto) async{
+    final atualizacao = await _service.AtualizarUsuario(atualizarUsuarioDto);
+    return atualizacao;
+  }
+
+  Future<RespostaModel<UsuariosModel>> BuscarUsuarioPorId(int id) async{
+    final busca = await _service.BuscarUsuarioPorId(id);
+    return busca;
   }
 }
