@@ -63,6 +63,10 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ],
             ),
+            Container(
+              width: ,
+            ),
+
             BottomNavBar(),
           ],
         ),
