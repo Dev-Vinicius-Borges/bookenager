@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:bookio/Server/controllers/EnderecoController.dart';
 import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
@@ -388,6 +389,11 @@ class RegistrarState extends State<Registrar> {
                             content: Text(criacaoUsuario.mensagem.toString()),
                           ),
                         );
+
+                        if (criacaoUsuario.status == HttpStatus.created){
+                          Navigator.pushNamed(context, "/login");
+                        }
+
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
