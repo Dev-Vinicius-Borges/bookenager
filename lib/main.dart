@@ -9,13 +9,12 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-  await dotenv.load(fileName: ".env");
 
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
-      url: dotenv.env['SUPABASE_URL']!,
-      anonKey: dotenv.env['SUPABASE_ANON_KEY']!
+      url: "https://nrwnieamlrlyjptobczx.supabase.co",
+      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yd25pZWFtbHJseWpwdG9iY3p4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg5NTUxODMsImV4cCI6MjA1NDUzMTE4M30.V0EolkKsFsymhkC_Uba8HV_g5uFdVqU7dn7VKhVm_L0"
   );
 
   runApp(
