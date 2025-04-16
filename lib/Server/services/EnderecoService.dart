@@ -131,7 +131,6 @@ class EnderecoService implements IEnderecoInterface {
               .select()
               .single();
 
-
       resposta.status = HttpStatus.created;
       resposta.mensagem = "Endereço criado com sucesso";
       resposta.dados = new EnderecoModel(

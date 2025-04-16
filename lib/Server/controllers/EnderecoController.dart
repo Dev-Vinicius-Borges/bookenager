@@ -27,7 +27,6 @@ class EnderecoController {
     CriarEnderecoDto criarEnderecoDto,
   ) async {
     final criacao = await _service.CriarEndereco(criarEnderecoDto);
-    print(criacao.mensagem);
     return criacao;
   }
 

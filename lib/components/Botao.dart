@@ -8,7 +8,7 @@ class Botao extends StatefulWidget{
   final Color corIcone;
   final Function()? funcao;
 
-  Botao({super.key, required this.corTexto, required this.icone, required this.corIcone, required this.texto, this.funcao})
+  Botao({super.key, required this.corTexto, required this.icone, required this.corIcone, required this.texto, this.funcao});
 
   @override
   State<Botao> createState() => _BotaoState();
