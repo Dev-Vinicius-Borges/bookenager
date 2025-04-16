@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bookio/Server/controllers/EnderecoController.dart';
 import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/models/EnderecoModel.dart';
@@ -7,8 +9,10 @@ import 'package:bookio/Server/session/config.dart';
 import 'package:bookio/components/Botao.dart';
 import 'package:bookio/components/BottomNavbar.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -21,6 +25,8 @@ class _AccountPageState extends State<AccountPage> {
   late int? id_usuario;
   late UsuariosModel _usuario;
   late EnderecoModel _endereco;
+  late double lat;
+  late double lng;
 
   Future<void> BuscarInformacoesDoUsuario(BuildContext context) async {
     id_usuario =
@@ -31,6 +37,31 @@ class _AccountPageState extends State<AccountPage> {
     RespostaModel<EnderecoModel> endereco = await EnderecoController()
         .BuscarEnderecoPorId(_usuario.endereco);
     _endereco = endereco.dados!;
+
+    print("Endereço: ${_endereco.rua}");
+
+    final url = Uri.https("cep.awesomeapi.com.br", "json/${_endereco.cep.toString()}");
+    var response = await http.get(url);
+
+    final dados = jsonDecode(response.body);
+
+    lat = double.parse(dados['lat']);
+    lng = double.parse(dados['lng']);
+
+    // LocationPermission permission = await Geolocator.requestPermission();
+    //
+    // if (permission == LocationPermission.denied) {
+    //   print("Permissão negada.");
+    //   return;
+    // }
+    //
+    // Position posicao = await Geolocator.getCurrentPosition(
+    //   desiredAccuracy: LocationAccuracy.high,
+    // );
+    //
+    // lat = posicao.latitude;
+    // lng = posicao.longitude;
+
   }
 
   @override
@@ -60,58 +91,196 @@ class _AccountPageState extends State<AccountPage> {
                     alignment: AlignmentDirectional(0, -1),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.width * 0.76,
                       child: Column(
+                        spacing: 32,
                         children: [
-                          Container(
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _usuario.nome,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                    _usuario.email,
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 158, 158, 158),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Divider(
-                            color: Color.fromARGB(255, 38, 45, 52),
-                            thickness: 2,
-                          ),
-                          Container(
-                            width: double.infinity,
+                          SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Informações pessoais",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
+                                Container(
+                                  width: double.infinity,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Informações pessoais",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Botao(
+                                            corTexto: Colors.white,
+                                            icone: Icons.edit,
+                                            corIcone: Colors.white,
+                                            texto: "Editar",
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    Botao(corTexto: Colors.white, icone: Icons.edit, corIcone: Colors.white, texto: "Editar")
-                                  ],
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 16),
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.only(top: 16),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Nome",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                _usuario.nome,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 16),
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.only(top: 16),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "E-mail",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                _usuario.email,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 16),
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.only(top: 16),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Senha",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                _usuario.senha,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Divider(
+                                  color: Color.fromARGB(255, 38, 45, 52),
+                                  thickness: 2,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Endereço",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Botao(
+                                            corTexto: Colors.white,
+                                            icone: Icons.edit,
+                                            corIcone: Colors.white,
+                                            texto: "Editar",
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(top: 16),
+                                        width: double.infinity,
+                                        height: 400,
+                                        child: FlutterMap(
+                                          options: MapOptions(
+                                            initialCenter: LatLng(
+                                              lat,
+                                              lng,
+                                            ),
+                                            initialZoom: 10,
+                                          ),
+                                          children: [
+                                            TileLayer(
+                                              urlTemplate:
+                                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                              userAgentPackageName:
+                                                  'com.example.app',
+                                            ),
+                                            CircleLayer(
+                                              circles: [
+                                                CircleMarker(
+                                                  point: LatLng(
+                                                    lat,
+                                                    lng,
+                                                  ),
+                                                  radius: 30,
+                                                  color: Colors.red.withValues(
+                                                    alpha: 0.3,
+                                                  ),
+                                                  borderColor: Colors.red
+                                                      .withValues(alpha: 0.7),
+                                                  borderStrokeWidth: 2,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
