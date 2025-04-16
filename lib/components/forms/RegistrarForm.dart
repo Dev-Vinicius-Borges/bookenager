@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:bookio/Server/controllers/EnderecoController.dart';
 import 'package:bookio/Server/controllers/UsuarioController.dart';
@@ -33,7 +34,7 @@ class RegistrarState extends State<Registrar> {
   }
 
   buscarEndereco(String cep) async {
-    final url = Uri.https("viacep.com.br", "ws/$cep/json/");
+    final url = Uri.https("cep.awesomeapi.com.br", "json/$cep");
     var response = await http.get(url);
 
     if (response.statusCode != 200) {
@@ -42,9 +43,10 @@ class RegistrarState extends State<Registrar> {
 
     final dados = jsonDecode(response.body);
 
-    ruaController.text = dados['logradouro'];
-    cidadeController.text = dados['localidade'];
-    estadoController.text = dados['estado'];
+    ruaController.text = dados['address_name'];
+    cidadeController.text = dados['city'];
+    estadoController.text = dados['state'];
+
   }
 
   @override
