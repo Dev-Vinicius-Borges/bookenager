@@ -38,11 +38,42 @@ class GeneroLiterarioService implements IGeneroLiterarioInterface {
               .toList();
 
       resposta.dados = generos;
-      resposta.mensagem = "Generos entrados.";
+      resposta.mensagem = "Generos encontrados.";
       resposta.status = HttpStatus.found;
 
       return resposta;
     } catch (err) {
+      resposta.status = HttpStatus.internalServerError;
+      resposta.mensagem = "Erro no servidor: ${err}";
+      return resposta;
+    }
+  }
+
+  @override
+  Future<RespostaModel<GeneroLiterarioModel>> BuscarGeneroPorNome(String nome) async{
+    RespostaModel<GeneroLiterarioModel> resposta = new RespostaModel<GeneroLiterarioModel>();
+    try{
+      var genero = await _contexto.from("generos_literarios").select().eq("genero", nome).maybeSingle();
+
+
+      if(genero == null){
+        resposta.status = HttpStatus.notFound;
+        resposta.mensagem = "Nenhum gênero literário encontrado.";
+        return resposta;
+      }
+
+      GeneroLiterarioModel generoEncontrado = new GeneroLiterarioModel(
+          id_genero: genero["id"],
+          nome: genero["genero"]
+      );
+
+      resposta.dados = generoEncontrado;
+      resposta.mensagem = "Genero encontrado.";
+      resposta.status = HttpStatus.found;
+
+      return resposta;
+
+    } catch (err){
       resposta.status = HttpStatus.internalServerError;
       resposta.mensagem = "Erro no servidor: ${err}";
       return resposta;

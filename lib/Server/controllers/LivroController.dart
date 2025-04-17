@@ -11,10 +11,11 @@ class LivroController {
     _service = LivroService();
   }
 
-  Future<RespostaModel<List<Map<String, dynamic>>>> BuscarLivrosPorIdDoUsuario(
+  Future<RespostaModel<List<LivrosModel>>> BuscarLivrosPorIdDoUsuario(
     int idUsuario,
   ) async {
     var busca = await _service.BuscarLivrosPorIdDoUsuario(idUsuario);
+
     return busca;
   }
 
@@ -22,6 +23,8 @@ class LivroController {
     CriarLivroDto criarLivroDto,
   ) async {
     var criacao = await _service.CriarNovoLivro(criarLivroDto);
+
+
     return criacao;
   }
 

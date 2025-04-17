@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bookio/Server/controllers/EnderecoController.dart';
 import 'package:bookio/Server/controllers/UsuarioController.dart';
 import 'package:bookio/Server/models/EnderecoModel.dart';
@@ -10,6 +9,7 @@ import 'package:bookio/components/Botao.dart';
 import 'package:bookio/components/BottomNavbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -38,8 +38,6 @@ class _AccountPageState extends State<AccountPage> {
         .BuscarEnderecoPorId(_usuario.endereco);
     _endereco = endereco.dados!;
 
-    print("Endereço: ${_endereco.rua}");
-
     final url = Uri.https("cep.awesomeapi.com.br", "json/${_endereco.cep.toString()}");
     var response = await http.get(url);
 
@@ -61,7 +59,6 @@ class _AccountPageState extends State<AccountPage> {
     //
     // lat = posicao.latitude;
     // lng = posicao.longitude;
-
   }
 
   @override
@@ -246,11 +243,8 @@ class _AccountPageState extends State<AccountPage> {
                                         height: 400,
                                         child: FlutterMap(
                                           options: MapOptions(
-                                            initialCenter: LatLng(
-                                              lat,
-                                              lng,
-                                            ),
-                                            initialZoom: 10,
+                                            initialCenter: LatLng(lat, lng),
+                                            initialZoom: 12,
                                           ),
                                           children: [
                                             TileLayer(
@@ -262,11 +256,8 @@ class _AccountPageState extends State<AccountPage> {
                                             CircleLayer(
                                               circles: [
                                                 CircleMarker(
-                                                  point: LatLng(
-                                                    lat,
-                                                    lng,
-                                                  ),
-                                                  radius: 30,
+                                                  point: LatLng(lat, lng),
+                                                  radius: 15,
                                                   color: Colors.red.withValues(
                                                     alpha: 0.3,
                                                   ),

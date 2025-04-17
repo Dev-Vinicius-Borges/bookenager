@@ -1,3 +1,4 @@
+import 'package:bookio/Server/models/LivrosModel.dart';
 import 'package:bookio/Server/session/config.dart';
 import 'package:bookio/components/BottomNavbar.dart';
 import 'package:bookio/components/CriarLivro.dart';
@@ -9,19 +10,20 @@ import 'package:bookio/Server/controllers/LivroController.dart';
 class BooksPage extends StatelessWidget {
   const BooksPage({super.key});
 
-  Future<List<Widget>> livrosDoUsuario(int? id) async {
-    var consulta = await LivroController().BuscarLivrosPorIdDoUsuario(id ?? 21);
-    var livros = consulta.dados ?? <Map<String, dynamic>>[];
+  Future<List<Widget>> livrosDoUsuario(int id) async {
+    var consulta = await LivroController().BuscarLivrosPorIdDoUsuario(id);
+    List<LivrosModel> livros = consulta.dados!;
+
 
     var livrosMapeados =
         livros
             .map(
               (livro) => Livros(
-                livro['id'],
-                livro['titulo'],
-                livro['autor'],
-                livro['paginas_lidas'],
-                livro['dono'],
+                livro.id_livro!,
+                livro.titulo,
+                livro.autor,
+                livro.paginas_lidas,
+                livro.id_usuario,
               ),
             )
             .toList();
@@ -106,7 +108,7 @@ class BooksPage extends StatelessWidget {
                       ),
                       Expanded(
                         child: FutureBuilder<List<Widget>>(
-                          future: livrosDoUsuario(idUsuario),
+                          future: livrosDoUsuario(idUsuario!),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {

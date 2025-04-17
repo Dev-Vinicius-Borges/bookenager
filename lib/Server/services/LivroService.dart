@@ -8,7 +8,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LivroService implements ILivroInterface {
   late SupabaseClient _contexto;
-  LivroService([SupabaseClient? cliente]){
+
+  LivroService([SupabaseClient? cliente]) {
     _contexto = cliente ?? Supabase.instance.client;
   }
 
@@ -52,10 +53,10 @@ class LivroService implements ILivroInterface {
   }
 
   @override
-  Future<RespostaModel<List<Map<String, dynamic>>>> BuscarLivrosPorIdDoUsuario(
+  Future<RespostaModel<List<LivrosModel>>> BuscarLivrosPorIdDoUsuario(
     int idUsuario,
   ) async {
-    RespostaModel<List<Map<String, dynamic>>> resposta = RespostaModel();
+    RespostaModel<List<LivrosModel>> resposta = RespostaModel<List<LivrosModel>>();
     try {
       var livros = await _contexto
           .from('livros')
@@ -69,7 +70,16 @@ class LivroService implements ILivroInterface {
         return resposta;
       }
 
-      resposta.dados = livros;
+      resposta.dados = livros.map(
+        (livro) => new LivrosModel(
+          id_livro: livro['id'],
+          titulo: livro['titulo'],
+          autor: livro['autor'],
+          paginas_lidas: livro['paginas_lidas'],
+          id_usuario: livro['id_usuario'],
+          genero: livro['genero'],
+        ),
+      ).toList();
       resposta.mensagem = "Livros encontrados.";
       resposta.status = HttpStatus.found;
 
@@ -91,8 +101,8 @@ class LivroService implements ILivroInterface {
           .from('livros')
           .select()
           .eq('titulo', criarLivroDto.titulo)
-          .eq('autor', criarLivroDto.autor);
-
+          .eq('autor', criarLivroDto.autor)
+          .eq('genero', criarLivroDto.genero);
 
       if (livro.isNotEmpty) {
         resposta.status = HttpStatus.conflict;
@@ -107,13 +117,15 @@ class LivroService implements ILivroInterface {
         'status': true,
         'dono': criarLivroDto.id_usuario,
         'autor': criarLivroDto.autor,
+        'genero': criarLivroDto.genero,
       });
 
-      resposta.dados = LivrosModel(
+      resposta.dados = new LivrosModel(
         titulo: criarLivroDto.titulo,
         autor: criarLivroDto.autor,
         paginas_lidas: criarLivroDto.paginas_lidas,
         id_usuario: criarLivroDto.id_usuario,
+        genero: criarLivroDto.genero,
       );
 
       resposta.mensagem = "Livro criado com sucesso.";
