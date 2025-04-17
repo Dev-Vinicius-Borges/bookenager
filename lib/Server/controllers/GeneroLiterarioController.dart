@@ -13,4 +13,10 @@ class GeneroLiterarioController{
     var busca = await _service.BuscarGenerosLiterarios();
     return busca;
   }
+
+  Future<RespostaModel<GeneroLiterarioModel>> BuscarGeneroPorNome(String nome) async{
+    var busca = await _service.BuscarGeneroPorNome(nome);
+    print("Resultado da busca: ${busca.mensagem}");
+    return busca;
+  }
 }
