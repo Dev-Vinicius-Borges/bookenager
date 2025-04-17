@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:bookio/Server/controllers/GeneroLiterarioController.dart';
 import 'package:bookio/Server/controllers/LivroController.dart';
 import 'package:bookio/Server/dtos/livro/CriarLivroDto.dart';
-import 'package:bookio/Server/models/EnderecoModel.dart';
 import 'package:bookio/Server/models/GeneroLiterarioModel.dart';
+import 'package:bookio/Server/models/RespostaModel.dart';
 import 'package:bookio/Server/session/config.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +39,11 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
     setState(() {
       items = generos.dados!.map((genero) => genero.nome).toList();
     });
+  }
+
+  Future<int> BuscarIdGeneroPorNome(String nome) async{
+    final genero = await GeneroLiterarioController().BuscarGeneroPorNome(nome);
+    return genero.dados!.id_genero;
   }
 
   @override
@@ -145,9 +149,25 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
-                  height: 70,
+                  height: 60,
                   child:  DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
+                        buttonStyleData: ButtonStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              color: Color.fromARGB(255, 144, 144, 144),
+                            ),
+                            color: Color.fromARGB(255, 20, 24, 27),
+                          ),
+                          elevation: 2,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Color.fromARGB(255, 20, 24, 27),
+                          ),
+                        ),
                         isExpanded: true,
                           hint: Text(
                             "Selecione o gênero",
@@ -160,6 +180,7 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                               item,
                               style: const TextStyle(
                                 fontSize: 14,
+                                color: Colors.white
                               ),
                             ),
                           ))
@@ -224,12 +245,18 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                   child: TextButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+
+                        print("ID encontrado: ${await BuscarIdGeneroPorNome(selecionado!)}");
+
                         CriarLivroDto novoLivro = CriarLivroDto(
                             titulo: tituloController.text,
                             autor: autorController.text,
                             paginas_lidas: int.parse(ultimaPaginaController.text),
-                            id_usuario: idUsuario!
+                            id_usuario: idUsuario!,
+                            genero: await BuscarIdGeneroPorNome(selecionado!)
                         );
+
+                        print("Criação: ${novoLivro.genero}");
 
                         final criacao = await LivroController().criarNovoLivro(novoLivro);
 
