@@ -7,6 +7,8 @@ import 'package:bookio/Server/models/UsuariosModel.dart';
 import 'package:bookio/Server/session/config.dart';
 import 'package:bookio/components/Botao.dart';
 import 'package:bookio/components/BottomNavbar.dart';
+import 'package:bookio/components/EditarEndereco.dart';
+import 'package:bookio/components/EditarInformacoesPessoais.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,7 +40,10 @@ class _AccountPageState extends State<AccountPage> {
         .BuscarEnderecoPorId(_usuario.endereco);
     _endereco = endereco.dados!;
 
-    final url = Uri.https("cep.awesomeapi.com.br", "json/${_endereco.cep.toString()}");
+    final url = Uri.https(
+      "cep.awesomeapi.com.br",
+      "json/${_endereco.cep.toString()}",
+    );
     var response = await http.get(url);
 
     final dados = jsonDecode(response.body);
@@ -46,9 +51,9 @@ class _AccountPageState extends State<AccountPage> {
     lat = double.parse(dados['lat']);
     lng = double.parse(dados['lng']);
 
-    // LocationPermission permission = await Geolocator.requestPermission();
+    // LocationPermission permissao = await Geolocator.requestPermission();
     //
-    // if (permission == LocationPermission.denied) {
+    // if (permissao == LocationPermission.denied) {
     //   print("Permissão negada.");
     //   return;
     // }
@@ -116,6 +121,22 @@ class _AccountPageState extends State<AccountPage> {
                                             icone: Icons.edit,
                                             corIcone: Colors.white,
                                             texto: "Editar",
+                                            funcao: () {
+                                              showBottomSheet(
+                                                context: context,
+                                                builder: (
+                                                  BuildContext context,
+                                                ) {
+                                                  return EditarInfoPessoal(
+                                                    id_usuario: id_usuario!,
+                                                    nome: _usuario.nome,
+                                                    email: _usuario.email,
+                                                    senha: _usuario.senha,
+                                                    endereco: _endereco.id,
+                                                  );
+                                                },
+                                              );
+                                            },
                                           ),
                                         ],
                                       ),
@@ -234,6 +255,23 @@ class _AccountPageState extends State<AccountPage> {
                                             icone: Icons.edit,
                                             corIcone: Colors.white,
                                             texto: "Editar",
+                                            funcao: () {
+                                              showBottomSheet(
+                                                context: context,
+                                                builder: (
+                                                  BuildContext context,
+                                                ) {
+                                                  return EditarEndereco(
+                                                    id_endereco: _endereco.id,
+                                                    cep: _endereco.cep,
+                                                    rua: _endereco.rua,
+                                                    cidade: _endereco.cidade,
+                                                    estado: _endereco.estado,
+                                                    numero: _endereco.numero,
+                                                  );
+                                                },
+                                              );
+                                            },
                                           ),
                                         ],
                                       ),
