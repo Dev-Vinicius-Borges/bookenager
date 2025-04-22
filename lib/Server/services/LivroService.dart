@@ -64,22 +64,26 @@ class LivroService implements ILivroInterface {
           .eq("dono", idUsuario)
           .eq('status', true);
 
+
       if (livros.isEmpty) {
         resposta.status = HttpStatus.notFound;
         resposta.mensagem = "Nenhum livro encontrado.";
         return resposta;
       }
 
-      resposta.dados = livros.map(
-        (livro) => new LivrosModel(
+      var livrosMap = livros.map(
+            (livro) => LivrosModel(
           id_livro: livro['id'],
           titulo: livro['titulo'],
           autor: livro['autor'],
           paginas_lidas: livro['paginas_lidas'],
-          id_usuario: livro['id_usuario'],
+          id_usuario: livro['dono'],
           genero: livro['genero'],
         ),
       ).toList();
+      
+      resposta.dados = livrosMap;
+
       resposta.mensagem = "Livros encontrados.";
       resposta.status = HttpStatus.found;
 

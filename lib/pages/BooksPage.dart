@@ -12,7 +12,9 @@ class BooksPage extends StatelessWidget {
 
   Future<List<Widget>> livrosDoUsuario(int id) async {
     var consulta = await LivroController().BuscarLivrosPorIdDoUsuario(id);
-    List<LivrosModel> livros = consulta.dados!;
+
+
+    var livros = consulta.dados!;
 
 
     var livrosMapeados =
@@ -27,6 +29,7 @@ class BooksPage extends StatelessWidget {
               ),
             )
             .toList();
+
 
     return livrosMapeados;
   }
