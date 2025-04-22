@@ -27,6 +27,7 @@ class EnderecoService implements IEnderecoInterface {
               .eq('id', atualizarEnderecoDto.id)
               .maybeSingle();
 
+
       if (buscaEndereco == null) {
         resposta.status = HttpStatus.notFound;
         resposta.mensagem = "Endereço não encontrado.";
@@ -40,15 +41,9 @@ class EnderecoService implements IEnderecoInterface {
             "rua": atualizarEnderecoDto.rua,
             "cidade": atualizarEnderecoDto.cidade,
             "estado": atualizarEnderecoDto.estado,
+            "numero": atualizarEnderecoDto.numero
           })
           .eq('id', atualizarEnderecoDto.id);
-
-      if (atualizacao.error != null) {
-        resposta.status = HttpStatus.internalServerError;
-        resposta.mensagem =
-            "Erro ao atualizar endereço: ${atualizacao.error!.message}";
-        return resposta;
-      }
 
       resposta.status = HttpStatus.ok;
       resposta.mensagem = "Endereço atualizado com sucesso.";
@@ -79,6 +74,7 @@ class EnderecoService implements IEnderecoInterface {
         rua: enderecoEncontrado['rua'],
         cidade: enderecoEncontrado['cidade'],
         estado: enderecoEncontrado['estado'],
+        numero: enderecoEncontrado['numero']
       );
 
       resposta.mensagem = "Endereço encontrado.";
@@ -99,26 +95,6 @@ class EnderecoService implements IEnderecoInterface {
   ) async {
     RespostaModel<EnderecoModel> resposta = new RespostaModel<EnderecoModel>();
     try {
-      var enderecoSemelhante =
-          await _contexto
-              .from('endereco')
-              .select()
-              .eq('cep', criarEnderecoDto.cep)
-              .maybeSingle();
-
-      if (enderecoSemelhante != null) {
-        resposta.status = HttpStatus.conflict;
-        resposta.mensagem = "Endereço já existe";
-        resposta.dados = new EnderecoModel(
-          id: enderecoSemelhante['id'],
-          cep: enderecoSemelhante['cep'],
-          rua: enderecoSemelhante['rua'],
-          cidade: enderecoSemelhante['cidade'],
-          estado: enderecoSemelhante['estado'],
-        );
-        return resposta;
-      }
-
       final novoEndereco =
           await _contexto
               .from('endereco')
@@ -127,6 +103,7 @@ class EnderecoService implements IEnderecoInterface {
                 "rua": criarEnderecoDto.rua,
                 "cidade": criarEnderecoDto.cidade,
                 "estado": criarEnderecoDto.estado,
+                "numero": criarEnderecoDto.numero
               })
               .select()
               .single();
@@ -134,11 +111,12 @@ class EnderecoService implements IEnderecoInterface {
       resposta.status = HttpStatus.created;
       resposta.mensagem = "Endereço criado com sucesso";
       resposta.dados = new EnderecoModel(
-        id: int.parse(novoEndereco['id']),
+        id: novoEndereco['id'],
         cep: novoEndereco['cep'],
         rua: novoEndereco['rua'],
         cidade: novoEndereco['cidade'],
         estado: novoEndereco['estado'],
+        numero: novoEndereco['numero']
       );
 
       return resposta;
@@ -172,13 +150,6 @@ class EnderecoService implements IEnderecoInterface {
 
       resposta.status = HttpStatus.ok;
       resposta.mensagem = "Endereço removido com sucesso.";
-      resposta.dados = EnderecoModel(
-        id: enderecoRemovido['id'],
-        cep: enderecoRemovido['cep'],
-        rua: enderecoRemovido['rua'],
-        cidade: enderecoRemovido['cidade'],
-        estado: enderecoRemovido['estado'],
-      );
 
       return resposta;
     } catch (err) {

@@ -4,6 +4,7 @@ class AtualizarEnderecoDto {
   final String rua;
   final String cidade;
   final String estado;
+  final String numero;
 
   AtualizarEnderecoDto({
     required this.id,
@@ -11,5 +12,6 @@ class AtualizarEnderecoDto {
     required this.rua,
     required this.cidade,
     required this.estado,
+    required this.numero
   });
 }

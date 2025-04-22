@@ -23,6 +23,7 @@ class RegistrarState extends State<Registrar> {
   TextEditingController ruaController = TextEditingController();
   TextEditingController cidadeController = TextEditingController();
   TextEditingController estadoController = TextEditingController();
+  TextEditingController numeroController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -327,6 +328,46 @@ class RegistrarState extends State<Registrar> {
                     ),
                     validator:
                         (String? value) =>
+                    !valueValidator(value) ? "Insira a rua." : null,
+                    controller: numeroController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 144, 144, 144),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 154, 154, 154),
+                          width: 2.0,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+
+                      hintText: 'Numero X',
+                      filled: true,
+                      alignLabelWithHint: true,
+                      label: Text(
+                        "Número",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
+                  height: 70,
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                    validator:
+                        (String? value) =>
                             !valueValidator(value) ? "Insira o estado." : null,
                     controller: estadoController,
                     decoration: InputDecoration(
@@ -370,10 +411,13 @@ class RegistrarState extends State<Registrar> {
                           rua: ruaController.text,
                           cidade: cidadeController.text,
                           estado: estadoController.text,
+                          numero: numeroController.text
                         );
+
 
                         final criacaoEndereco = await EnderecoController()
                             .CriarEndereco(novoEndereco);
+
 
                         CriarUsuarioDto novoUsuario = CriarUsuarioDto(
                           nome: nameController.text,
@@ -382,9 +426,10 @@ class RegistrarState extends State<Registrar> {
                           endereco: criacaoEndereco.dados!.id,
                         );
 
+
+
                         final criacaoUsuario = await UsuarioController()
                             .CriarUsuario(novoUsuario);
-
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

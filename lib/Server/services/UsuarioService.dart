@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bookio/Server/abstracts/IUsuarioInterface.dart';
 import 'package:bookio/Server/dtos/Usuario/AtualizarUsuarioDto.dart';
 import 'package:bookio/Server/dtos/Usuario/CriarUsuarioDto.dart';
@@ -9,6 +8,12 @@ import 'package:bookio/Server/models/UsuariosModel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UsuarioService implements IUsuarioInterface {
+  late SupabaseClient _contexto;
+
+  UsuarioService([SupabaseClient? cliente]) {
+    _contexto = cliente ?? Supabase.instance.client;
+  }
+
   @override
   Future<RespostaModel<UsuariosModel>> BuscarUsuarioPorEmail(String email) {
     // TODO: implement BuscarUsuarioPorEmail
@@ -22,7 +27,7 @@ class UsuarioService implements IUsuarioInterface {
     RespostaModel<UsuariosModel> resposta = RespostaModel();
     try {
       var consulta =
-          await Supabase.instance.client
+          await _contexto
               .from("usuarios")
               .select()
               .eq("email", criarUsuarioDto.email)
@@ -34,7 +39,7 @@ class UsuarioService implements IUsuarioInterface {
         return resposta;
       }
 
-      await Supabase.instance.client
+      await _contexto
           .from("usuarios")
           .insert({
             "nome": criarUsuarioDto.nome,
@@ -63,7 +68,7 @@ class UsuarioService implements IUsuarioInterface {
     RespostaModel<UsuariosModel> resposta = RespostaModel();
     try {
       final consulta =
-          await Supabase.instance.client
+          await _contexto
               .from("usuarios")
               .select()
               .eq("email", fazerLoginDto.email)
@@ -105,7 +110,7 @@ class UsuarioService implements IUsuarioInterface {
     RespostaModel<UsuariosModel> resposta = RespostaModel<UsuariosModel>();
     try {
       final usuario =
-          await Supabase.instance.client
+          await _contexto
               .from('usuarios')
               .select()
               .eq('id', atualizarUsuarioDto.id)
@@ -117,11 +122,14 @@ class UsuarioService implements IUsuarioInterface {
         return resposta;
       }
 
-      await Supabase.instance.client.from('usuarios').update({
-        "nome": atualizarUsuarioDto.nome,
-        "email": atualizarUsuarioDto.email,
-        "senha": atualizarUsuarioDto.senha,
-      });
+      await _contexto
+          .from('usuarios')
+          .update({
+            "nome": atualizarUsuarioDto.nome,
+            "email": atualizarUsuarioDto.email,
+            "senha": atualizarUsuarioDto.senha,
+          })
+          .eq("id", atualizarUsuarioDto.id);
 
       resposta.mensagem = "Usuário atualizado com sucesso.";
       resposta.status = HttpStatus.accepted;
@@ -146,7 +154,7 @@ class UsuarioService implements IUsuarioInterface {
     RespostaModel<UsuariosModel> resposta = RespostaModel<UsuariosModel>();
     try {
       final usuario =
-          await Supabase.instance.client
+          await _contexto
               .from('usuarios')
               .select()
               .eq('id', idUsuario)
