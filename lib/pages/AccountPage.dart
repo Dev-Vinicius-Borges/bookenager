@@ -311,6 +311,20 @@ class _AccountPageState extends State<AccountPage> {
                                     ],
                                   ),
                                 ),
+                                Divider(
+                                  color: Color.fromARGB(255, 38, 45, 52),
+                                  thickness: 2,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  alignment: Alignment.bottomRight,
+                                  child: Botao(
+                                    corTexto: Colors.white,
+                                    icone: Icons.logout,
+                                    corIcone: Colors.white,
+                                    texto: "Sair da conta",
+                                  ),
+                                ),
                               ],
                             ),
                           ),
