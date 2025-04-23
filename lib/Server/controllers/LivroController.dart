@@ -23,8 +23,6 @@ class LivroController {
     CriarLivroDto criarLivroDto,
   ) async {
     var criacao = await _service.CriarNovoLivro(criarLivroDto);
-
-
     return criacao;
   }
 

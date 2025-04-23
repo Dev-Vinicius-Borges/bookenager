@@ -50,21 +50,28 @@ class GeneroLiterarioService implements IGeneroLiterarioInterface {
   }
 
   @override
-  Future<RespostaModel<GeneroLiterarioModel>> BuscarGeneroPorNome(String nome) async{
-    RespostaModel<GeneroLiterarioModel> resposta = new RespostaModel<GeneroLiterarioModel>();
-    try{
-      var genero = await _contexto.from("generos_literarios").select().eq("genero", nome).maybeSingle();
+  Future<RespostaModel<GeneroLiterarioModel>> BuscarGeneroPorNome(
+    String nome,
+  ) async {
+    RespostaModel<GeneroLiterarioModel> resposta =
+        new RespostaModel<GeneroLiterarioModel>();
+    try {
+      var genero =
+          await _contexto
+              .from("generos_literarios")
+              .select()
+              .eq("genero", nome)
+              .maybeSingle();
 
-
-      if(genero == null){
+      if (genero == null) {
         resposta.status = HttpStatus.notFound;
         resposta.mensagem = "Nenhum gênero literário encontrado.";
         return resposta;
       }
 
       GeneroLiterarioModel generoEncontrado = new GeneroLiterarioModel(
-          id_genero: genero["id"],
-          nome: genero["genero"]
+        id_genero: genero["id"],
+        nome: genero["genero"],
       );
 
       resposta.dados = generoEncontrado;
@@ -72,8 +79,38 @@ class GeneroLiterarioService implements IGeneroLiterarioInterface {
       resposta.status = HttpStatus.found;
 
       return resposta;
+    } catch (err) {
+      resposta.status = HttpStatus.internalServerError;
+      resposta.mensagem = "Erro no servidor: ${err}";
+      return resposta;
+    }
+  }
 
-    } catch (err){
+  @override
+  Future<RespostaModel<GeneroLiterarioModel>> BuscarGeneroPorId(int id) async {
+    RespostaModel<GeneroLiterarioModel> resposta =
+        new RespostaModel<GeneroLiterarioModel>();
+    try {
+      var genero = await _contexto.from('generos_literarios').select().eq("id", id).maybeSingle();
+
+      if(genero == null){
+        resposta.mensagem = "Genero não encontrado";
+        resposta.status = HttpStatus.notFound;
+        return resposta;
+      }
+
+      GeneroLiterarioModel generoMapeado = new GeneroLiterarioModel(
+          id_genero: genero["id"],
+          nome: genero["genero"]
+      );
+
+      resposta.dados = generoMapeado;
+      resposta.mensagem = "Gênero encontrado.";
+      resposta.status = HttpStatus.found;
+
+      return resposta;
+
+    } catch (err) {
       resposta.status = HttpStatus.internalServerError;
       resposta.mensagem = "Erro no servidor: ${err}";
       return resposta;
