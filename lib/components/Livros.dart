@@ -10,13 +10,15 @@ class Livros extends StatefulWidget {
   final String autor;
   final int paginas_lidas;
   final int id_usuario;
+  final int id_genero;
 
   const Livros(
     this.id_livro,
     this.titulo,
     this.autor,
     this.paginas_lidas,
-    this.id_usuario, {
+    this.id_usuario,
+    this.id_genero,{
     super.key,
   });
 
@@ -114,6 +116,7 @@ class _LivrosState extends State<Livros> {
                                 widget.autor,
                                 widget.paginas_lidas,
                                 widget.id_usuario,
+                                widget.id_genero
                               );
                             },
                           );

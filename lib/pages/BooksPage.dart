@@ -26,6 +26,7 @@ class BooksPage extends StatelessWidget {
                 livro.autor,
                 livro.paginas_lidas,
                 livro.id_usuario,
+                livro.genero
               ),
             )
             .toList();

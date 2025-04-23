@@ -7,13 +7,15 @@ class EditarLivro extends StatefulWidget {
   final String autor;
   final int paginas_lidas;
   final int id_usuario;
+  final int id_genero;
 
   const EditarLivro(
     this.id_livro,
     this.titulo,
     this.autor,
     this.paginas_lidas,
-    this.id_usuario, {
+    this.id_usuario,
+    this.id_genero, {
     super.key,
   });
 
@@ -91,6 +93,7 @@ class _EditarLivroState extends State<EditarLivro> {
                       id_usuario: widget.id_usuario,
                       titulo: widget.titulo,
                       autor: widget.autor,
+                      id_genero: widget.id_genero,
                     ),
                   ),
                 ),

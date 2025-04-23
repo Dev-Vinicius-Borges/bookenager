@@ -246,7 +246,6 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
 
-                        print("ID encontrado: ${await BuscarIdGeneroPorNome(selecionado!)}");
 
                         CriarLivroDto novoLivro = CriarLivroDto(
                             titulo: tituloController.text,

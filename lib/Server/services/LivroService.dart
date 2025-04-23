@@ -38,6 +38,7 @@ class LivroService implements ILivroInterface {
             "paginas_lidas": atualizarLivroDto.paginas_lidas,
             "autor": atualizarLivroDto.autor,
             "titulo": atualizarLivroDto.titulo,
+            "genero": atualizarLivroDto.id_genero
           })
           .eq('id', atualizarLivroDto.id_livro)
           .eq('dono', atualizarLivroDto.id_usuario);

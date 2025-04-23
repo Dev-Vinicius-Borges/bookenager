@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:bookio/Server/controllers/GeneroLiterarioController.dart';
 import 'package:bookio/Server/controllers/LivroController.dart';
 import 'package:bookio/Server/dtos/livro/AtualizarLivroDto.dart';
+import 'package:bookio/Server/models/GeneroLiterarioModel.dart';
 import 'package:bookio/Server/session/config.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +15,7 @@ class EditarLivroForm extends StatefulWidget {
   final String autor;
   final int paginas_lidas;
   final int id_usuario;
+  final int id_genero;
 
   const EditarLivroForm({
     required this.autor,
@@ -19,6 +23,7 @@ class EditarLivroForm extends StatefulWidget {
     required this.titulo,
     required this.paginas_lidas,
     required this.id_usuario,
+    required this.id_genero,
     super.key,
   });
 
@@ -27,17 +32,11 @@ class EditarLivroForm extends StatefulWidget {
 }
 
 class _EditarLivroFormState extends State<EditarLivroForm> {
+  late List<String> items = [];
   TextEditingController tituloController = TextEditingController();
   TextEditingController autorController = TextEditingController();
   TextEditingController ultimaPaginaController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    tituloController.text = widget.titulo;
-    autorController.text = widget.autor;
-    ultimaPaginaController.text = widget.paginas_lidas.toString();
-  }
+  String? selecionado;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -46,6 +45,33 @@ class _EditarLivroFormState extends State<EditarLivroForm> {
       return false;
     }
     return true;
+  }
+
+  Future<void> buscarGenerosLiterarios() async{
+    final generos = await GeneroLiterarioController().BuscarGeneros();
+    setState(() {
+      items = generos.dados!.map((genero) => genero.nome).toList();
+    });
+  }
+
+  Future<int> BuscarIdGeneroPorNome(String nome) async{
+    final genero = await GeneroLiterarioController().BuscarGeneroPorNome(nome);
+    return genero.dados!.id_genero;
+  }
+
+  Future<void> BuscarGeneroPorId() async{
+    final genero = await GeneroLiterarioController().BuscarGeneroPorID(widget.id_genero);
+    selecionado = genero.dados!.nome;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    tituloController.text = widget.titulo;
+    autorController.text = widget.autor;
+    ultimaPaginaController.text = widget.paginas_lidas.toString();
+    buscarGenerosLiterarios();
+    BuscarGeneroPorId();
   }
 
   @override
@@ -146,6 +172,55 @@ class _EditarLivroFormState extends State<EditarLivroForm> {
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: SizedBox(
+                  height: 60,
+                  child:  DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        buttonStyleData: ButtonStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              color: Color.fromARGB(255, 144, 144, 144),
+                            ),
+                            color: Color.fromARGB(255, 20, 24, 27),
+                          ),
+                          elevation: 2,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Color.fromARGB(255, 20, 24, 27),
+                          ),
+                        ),
+                        isExpanded: true,
+                        hint: Text(
+                          "Selecione o gênero",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        items: items
+                            .map((item) => DropdownMenuItem(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white
+                            ),
+                          ),
+                        ))
+                            .toList(),
+                        value: selecionado,
+                        onChanged: (value) {
+                          setState(() {
+                            selecionado = value;
+                          });
+                        },
+                      )
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: SizedBox(
                   height: 70,
                   child: TextFormField(
                     style: TextStyle(
@@ -202,6 +277,7 @@ class _EditarLivroFormState extends State<EditarLivroForm> {
                                 ultimaPaginaController.text,
                               ),
                               id_usuario: widget.id_usuario,
+                              id_genero: await BuscarIdGeneroPorNome(selecionado!)
                             );
 
                         final atualizacao = await LivroController()
