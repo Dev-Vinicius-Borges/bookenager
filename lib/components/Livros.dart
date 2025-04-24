@@ -42,6 +42,11 @@ class _LivrosState extends State<Livros> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Container(
+                  width: 150,
+                  height: 200,
+                  color: Colors.purple,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
