@@ -68,10 +68,6 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
   }
 
   Future<void> iniciarCamera() async {
-    final status = await Permission.camera.request();
-    if (!status.isGranted) {
-      return;
-    }
     _cameras = await availableCameras();
 
     _controller = CameraController(_cameras[0], ResolutionPreset.max);
@@ -342,9 +338,9 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                           paginas_lidas: int.parse(ultimaPaginaController.text),
                           id_usuario: idUsuario!,
                           genero: await BuscarIdGeneroPorNome(selecionado!),
+                          url_imagem: _imagemCapturada!
                         );
 
-                        print("Criação: ${novoLivro.genero}");
 
                         final criacao = await LivroController().criarNovoLivro(
                           novoLivro,
@@ -357,6 +353,7 @@ class _CriarLivroFormState extends State<CriarLivroForm> {
                         if (criacao.status == HttpStatus.created) {
                           Navigator.pushReplacementNamed(context, "/home");
                         }
+
                       }
                     },
                     style: ButtonStyle(
